@@ -1,0 +1,12 @@
+<div id="{{ self.url_name }}" class="adventure">
+  {% if self.title %}
+  <h1>{{ self.title }}</h1>
+  {% endif %}
+
+  {% if self.info %}
+  <p>{{ self.info }}</p>
+  {% endif %}
+
+  <div class="step-view"></div>
+  <div class="navigation-view"></div>
+</div>

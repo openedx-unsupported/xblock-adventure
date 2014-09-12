@@ -1,0 +1,12 @@
+<adventure url_name="{{ url_name }}" display_name="Nav tooltip title">
+    <title>Default Title</title>
+    <info>Adventure description.</info>
+
+    <step name="first">
+      This is step 1.
+    </step>
+
+    <step name="last" back="true">
+      This is step 2.
+    </step>
+</adventure>
