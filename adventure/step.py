@@ -23,43 +23,20 @@
 
 # Imports ###########################################################
 
-import os
-from setuptools import setup
+import logging
 
+from mentoring.light_children import LightChild, Scope, String
 
-# Functions #########################################################
+# Globals ###########################################################
 
-def package_data(pkg, root_list):
-    """Generic function to find package_data for `pkg` under `root`."""
-    data = []
-    for root in root_list:
-        for dirname, _, files in os.walk(os.path.join(pkg, root)):
-            for fname in files:
-                data.append(os.path.relpath(os.path.join(dirname, fname), pkg))
+log = logging.getLogger(__name__)
 
-    return {pkg: data}
+# Classes ###########################################################
 
-
-BLOCKS = [
-    'adventure = adventure:AdventureBlock',
-]
-
-BLOCKS_CHILDREN = [
-    'info = adventure:InfoBlock',
-    'step = adventure:StepBlock',
-]
-
-setup(
-    name='xblock-adventure',
-    version='0.1',
-    description='XBlock - Adventure',
-    packages=['adventure'],
-    install_requires=[
-        'XBlock',
-    ],
-    entry_points={
-        'xblock.v1': BLOCKS,
-        'xblock.light_children': BLOCKS_CHILDREN,
-    },
-    package_data=package_data("adventure", ["templates", "public"]),
-)
+class StepBlock(LightChild):
+    """
+    A representation of an adventure step.
+    """
+    name = String(help="Name of the step", scope=Scope.content, default=None)
+    back = String(help="Name of the back step", scope=Scope.content, default=None)
+    has_children = True

@@ -6,7 +6,7 @@
       This is step 1.
     </step>
 
-    <step name="last" back="true">
+    <step name="last" back="first">
       This is step 2.
     </step>
 </adventure>

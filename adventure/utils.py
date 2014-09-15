@@ -66,29 +66,6 @@ def render_js_template(template_path, context={}, id='light-child'):
     )
 
 
-def serialize_opaque_key(key):
-    """
-    Gracefully handle opaque keys, both before and after the transition.
-    https://github.com/edx/edx-platform/wiki/Opaque-Keys
-
-    From https://github.com/edx/edx-ora2/pull/330
-
-    Currently uses `to_deprecated_string()` to ensure that new keys
-    are backwards-compatible with keys we store in ORA2 database models.
-
-    Args:
-    key (unicode or OpaqueKey subclass): The key to serialize.
-
-    Returns:
-    unicode
-
-    """
-    if hasattr(key, 'to_deprecated_string'):
-        return key.to_deprecated_string()
-    else:
-        return unicode(key)
-
-
 # Classes ###########################################################
 
 class XBlockWithChildrenFragmentsMixin(object):
