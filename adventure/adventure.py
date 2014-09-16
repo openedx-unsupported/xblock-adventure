@@ -24,7 +24,7 @@
 # Imports ###########################################################
 
 import logging
-import uuid
+from uuid import uuid4
 
 from lxml import etree
 from StringIO import StringIO
@@ -57,8 +57,8 @@ class AdventureBlock(XBlockWithLightChildren):
     Composed of text, video, questions and steps, this xblock acts like a 'Choose your own
     adventure'.
     """
-    url_name = String(help="Name of the current step, used for URL building",
-                      default='adventure-default', scope=Scope.content)
+    adventure_id = String(scope=Scope.settings, default=lambda: uuid4().hex)
+
     xml_content = String(help="XML content", default='', scope=Scope.content)
     current_step_name = String(help="Keep track of the student assessment progress.",
                                default='', scope=Scope.user_state)
@@ -66,7 +66,7 @@ class AdventureBlock(XBlockWithLightChildren):
     display_name = String(help="Display name of the component", default="Adventure",
                           scope=Scope.settings)
 
-    JST = [
+    JS_TEMPLATES = [
         ('adventure-step-view', 'templates/html/adventure_step_view.html'),
         ('adventure-navigation-view', 'templates/html/adventure_navigation_view.html'),
     ]
@@ -123,7 +123,7 @@ class AdventureBlock(XBlockWithLightChildren):
         * The first step name must be "first"
         * All back attribute must be a valid step name.
 
-        Raises a ValueErorexception on error.
+        Raises a ValueError exception on error.
         """
 
         step_names = []
@@ -243,7 +243,7 @@ class AdventureBlock(XBlockWithLightChildren):
             self.runtime.local_resource_url(self,'public/js/adventure_models.js'))
 
         context={}
-        for template in self.JST:
+        for template in self.JS_TEMPLATES:
             fragment.add_resource(
                 render_js_template(template[1], context=context, id=template[0]),
                 "text/html"
@@ -267,7 +267,7 @@ class AdventureBlock(XBlockWithLightChildren):
     @XBlock.json_handler
     def submit(self, submissions, suffix=''):
         log.debug(u'Received submissions for {}, step "{}":{}'.format(
-            self.url_name, self.current_step_name, submissions)
+            self.adventure_id, self.current_step_name, submissions)
         )
 
         next_step = self._get_next_step()
@@ -285,7 +285,7 @@ class AdventureBlock(XBlockWithLightChildren):
     @XBlock.json_handler
     def fetch_current_step(self, submissions, suffix=''):
         log.debug(u'Fetching current student step for {}, step "{}"'.format(
-            self.url_name, self.current_step_name)
+            self.adventure_id, self.current_step_name)
         )
 
         return self._render_current_step()
@@ -293,7 +293,7 @@ class AdventureBlock(XBlockWithLightChildren):
     @XBlock.json_handler
     def fetch_previous_step(self, submissions, suffix=''):
         log.debug(u'Fetching previous student step for {}, step "{}"'.format(
-            self.url_name, self.current_step_name)
+            self.adventure_id, self.current_step_name)
         )
 
         previous_step = self._get_previous_step()
@@ -304,7 +304,7 @@ class AdventureBlock(XBlockWithLightChildren):
 
     @XBlock.json_handler
     def start_over(self, submissions, suffix=''):
-        log.debug(u'Start Over {}'.format(self.url_name))
+        log.debug(u'Start Over {}'.format(self.adventure_id))
 
         self.current_step_name = "first"
 
@@ -357,9 +357,12 @@ class AdventureBlock(XBlockWithLightChildren):
                 response = {
                     'result': 'success'
                 }
-                url_name = root.attrib.get('url_name', '')
-                if url_name:
-                    self.url_name = url_name
+
+                # Fix to get the xblock initialzed in edx/XBlock
+                adventure_id = self.adventure_id
+                if hasattr(adventure_id, '__call__'):
+                    self.adventure_id = adventure_id()
+
                 self.xml_content = etree.tostring(content, pretty_print=True)
 
         log.debug(u'Response from Studio: {}'.format(response))
@@ -368,20 +371,5 @@ class AdventureBlock(XBlockWithLightChildren):
     @property
     def default_xml_content(self):
         return render_template('templates/xml/adventure_default.xml', {
-            'self': self,
-            'url_name': self.url_name_with_default,
+            'self': self
         })
-
-    @property
-    def url_name_with_default(self):
-        """
-        Ensure the `url_name` is set to a unique, non-empty value.
-        This should ideally be handled by Studio, but we need to declare the attribute
-        to be able to use it from the workbench, and when this happen Studio doesn't set
-        a unique default value - this property gives either the set value, or if none is set
-        a randomized default value
-        """
-        if self.url_name == 'adventure-default':
-            return 'adventure-{}'.format(uuid.uuid4())
-        else:
-            return self.url_name

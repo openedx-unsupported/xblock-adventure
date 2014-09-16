@@ -1,4 +1,4 @@
-<adventure url_name="{{ url_name }}" display_name="Nav tooltip title">
+<adventure display_name="Nav tooltip title">
     <title>Default Title</title>
     <info>Adventure description.</info>
 
