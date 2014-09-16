@@ -26,6 +26,7 @@
 import logging
 
 from mentoring.light_children import LightChild, Scope, String
+from .utils import render_template
 
 # Globals ###########################################################
 
@@ -37,6 +38,21 @@ class StepBlock(LightChild):
     """
     A representation of an adventure step.
     """
+    content = String(help="Text of the info to provide if needed", scope=Scope.content, default="")
     name = String(help="Name of the step", scope=Scope.content, default=None)
     back = String(help="Name of the back step", scope=Scope.content, default=None)
     has_children = True
+
+    def render(self, context=None):
+        """
+        Returns a fragment containing the formatted step
+        """
+        context = context or {}
+        context['as_template'] = False
+
+        fragment, named_children = self.get_children_fragment(context)
+        fragment.add_content(render_template('templates/html/step.html', {
+            'self': self,
+            'named_children': named_children,
+        }))
+        return self.xblock_container.fragment_text_rewriting(fragment)

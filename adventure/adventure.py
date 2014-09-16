@@ -158,12 +158,13 @@ class AdventureBlock(XBlockWithLightChildren):
                 self.current_step_name = "first"
 
             current_step = self._get_current_step()
+            step_fragment = current_step.render()
             response = {
                 'result': 'success',
                 'step': {
                     'name': current_step.name,
                     'can_go_back': current_step.back if current_step.back else False,
-                    'html': '<p>{}</p>'.format('ALLO STEP CONTENT'), # TODO, remove
+                    'html': step_fragment.content,
                     'is_last_step': self.current_step_name == self.steps[-1].name # TODO, remove
                 }
             }

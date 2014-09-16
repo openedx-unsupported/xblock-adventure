@@ -45,7 +45,10 @@ class InfoBlock(LightChild):
         """
         Returns a fragment containing the formatted tip
         """
-        fragment, named_children = self.get_children_fragment({'as_template': False})
+        context = context or {}
+        context['as_template'] = False
+
+        fragment, named_children = self.get_children_fragment(context)
         fragment.add_content(render_template('templates/html/info.html', {
             'self': self,
             'named_children': named_children,
