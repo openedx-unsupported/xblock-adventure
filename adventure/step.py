@@ -26,6 +26,8 @@
 import logging
 
 from mentoring.light_children import LightChild, Scope, String
+from mentoring import MCQBlock
+
 from .utils import render_template
 
 # Globals ###########################################################
@@ -56,3 +58,13 @@ class StepBlock(LightChild):
             'named_children': named_children,
         }))
         return self.xblock_container.fragment_text_rewriting(fragment)
+
+    @property
+    def has_choices(self):
+        """
+        Returns True if the current_step has choices.
+        """
+
+        choices = [mcq for mcq in self.get_children_objects() if isinstance(mcq, MCQBlock)]
+
+        return True if choices else False

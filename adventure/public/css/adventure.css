@@ -6,3 +6,8 @@
     text-align: center;
 }
 
+.adventure .step-view .step,
+.adventure .step-view .step-child
+{
+    margin-top: 10px;
+}

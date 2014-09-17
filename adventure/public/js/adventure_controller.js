@@ -6,6 +6,7 @@ var AdventureController = Backbone.Marionette.Controller.extend({
 
         this._createFunctionAliases();
         _.bindAll(this, 'showNextStep', 'showPreviousStep', 'showStep', 'startOver');
+        this.registerHandlers();
     },
 
     /* Create the following function aliases, which are variants of _fetchStep
@@ -34,6 +35,13 @@ var AdventureController = Backbone.Marionette.Controller.extend({
             this._fetchStep,
             this.runtime.handlerUrl(this.app.container, 'start_over')
         );
+    },
+
+    registerHandlers: function() {
+        this.app.vent.on("show:next:step", this.showNextStep);
+        this.app.vent.on("show:previous:step", this.showPreviousStep);
+        this.app.vent.on("start:over", this.startOver);
+
     },
 
     // Fetch previous current and next steps on th server
@@ -75,9 +83,12 @@ var AdventureController = Backbone.Marionette.Controller.extend({
 
     showStep: function(step_data) {
         var step = new AdventureStepModel(step_data);
-        this._changeStepRegion(new AdventureStepView({model: step}))
-        this.app.vent.trigger('step:is:last', step_data.is_last_step);
-        this.app.vent.trigger('step:allow:back', step_data.can_go_back);
+        var options = {
+            'app': this.app,
+            'model': step
+        };
+        this._changeStepRegion(new AdventureStepView(options));
+        this.app.vent.trigger("step:change", step);
     },
 
     showCurrentStep: function() {
@@ -85,7 +96,8 @@ var AdventureController = Backbone.Marionette.Controller.extend({
     },
 
     showNextStep: function() {
-        this._fetchNextStep().done(this.showStep);
+        var data = this.app.request('stepData');
+        this._fetchNextStep(data).done(this.showStep);
     },
 
     showPreviousStep: function() {

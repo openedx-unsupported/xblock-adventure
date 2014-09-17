@@ -73,23 +73,30 @@ class AdventureBlock(XBlockWithLightChildren):
 
     def _get_current_step(self):
         """
-        Find the current step in the list with *current_step*. Return a StepBlock object.
+        Find the current step in the list with *current_step*.
+
+        Return a StepBlock object.
         """
         for step in self.steps:
             if step.name == self.current_step_name:
                 return step
         return None
 
-    def _get_next_step(self):
+    def _get_next_step(self, next_step_name=None):
         """
-        Find the next step. Returns a StepBlock object.
+        Find the next step. If step_name is specified, look for that name.
+
+        Returns a StepBlock object.
         """
+        if next_step_name:
+            return self._get_step_by_name(next_step_name)
+
         current_step_found = False
         for step in self.steps:
-            if not current_step_found and step.name == self.current_step_name:
-                current_step_found = True
-            elif current_step_found:
+            if current_step_found:
                 return step
+            elif step.name == self.current_step_name:
+                current_step_found = True
 
         return None
 
@@ -122,6 +129,8 @@ class AdventureBlock(XBlockWithLightChildren):
         * All step names must be unique.
         * The first step name must be "first"
         * All back attribute must be a valid step name.
+        * All mcq must contain choices.
+        * All mcq choice values must be a valid step name.
 
         Raises a ValueError exception on error.
         """
@@ -137,9 +146,22 @@ class AdventureBlock(XBlockWithLightChildren):
             raise ValueError('The first step name must be "first"')
 
         for step in steps:
+            # Check if the back attribute is valid
             back = step.attrib.get('back', None)
             if back is not None and back not in step_names:
                 raise ValueError('All step "back" attributes must be a valid step name.')
+
+            # Check if the mcq choice values are valid
+            mcq = step.find('mcq')
+            if mcq is not None:
+                choices = mcq.findall('choice')
+                if not choices:
+                    raise ValueError('All mcq must contain choices.')
+                for choice in choices:
+                    value = choice.attrib.get('value', None)
+                    if value is None or value not in step_names:
+                        raise ValueError('All mcq choice values must be a valid step name.')
+
 
     def _render_current_step(self):
         """
@@ -163,9 +185,10 @@ class AdventureBlock(XBlockWithLightChildren):
                 'result': 'success',
                 'step': {
                     'name': current_step.name,
-                    'can_go_back': current_step.back if current_step.back else False,
+                    'has_back_step': True if current_step.back else False,
                     'html': step_fragment.content,
-                    'is_last_step': self.current_step_name == self.steps[-1].name # TODO, remove
+                    'has_choices': current_step.has_choices,
+                    'is_last_step': self.current_step_name == self.steps[-1].name
                 }
             }
 
@@ -207,10 +230,10 @@ class AdventureBlock(XBlockWithLightChildren):
 
     def student_view(self, context):
         fragment = Fragment()
-        fragment, named_children = self.get_children_fragment(
-            context, view_name='adventure_view',
-            not_instance_of=(TitleBlock, InfoBlock, StepBlock)
-        )
+        # fragment, named_children = self.get_children_fragment(
+        #     context, view_name='adventure_view',
+        #     not_instance_of=(TitleBlock, InfoBlock, StepBlock)
+        # )
 
         # First access, set the current_step to the beginning of the adventure
         if not self.current_step_name and self.has_steps:
@@ -219,6 +242,7 @@ class AdventureBlock(XBlockWithLightChildren):
         info_fragment = None
         if self.info:
             info_fragment = self.info.render(context={'as_template': False})
+
         fragment.add_content(render_template(
             'templates/html/adventure.html', {
                 'self': self,
@@ -271,11 +295,20 @@ class AdventureBlock(XBlockWithLightChildren):
             self.adventure_id, self.current_step_name, submissions)
         )
 
-        next_step = self._get_next_step()
-        if not next_step:
+        current_step = self._get_current_step()
+        next_step_name = submissions['choice'] if 'choice' in submissions else None
+        next_step = self._get_next_step(next_step_name)
+
+        if not current_step or not next_step:
             return {
                 'result': 'error',
-                'message': 'No next step. current_step: {}'.format(self.current_step_name)
+                'message': 'Invalid next step. current_step_name: {}'.format(self.current_step_name)
+            }
+
+        if not next_step_name and current_step.has_choices:
+            return {
+                'result': 'error',
+                'message': 'Invalid submission. current_step_name: {}'.format(self.current_step_name)
             }
 
         self.current_step_name = next_step.name

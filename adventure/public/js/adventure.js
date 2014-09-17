@@ -30,11 +30,6 @@ function AdventureBlock(runtime, element) {
             runtime: runtime
         });
 
-        // setup app handlers
-        app.vent.on("showNextStep", controller.showNextStep);
-        app.vent.on("showPreviousStep", controller.showPreviousStep);
-        app.vent.on("startOver", controller.startOver);
-
         // display current step and navigation
         controller.showCurrentStep();
         controller.showNavigation();

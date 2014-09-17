@@ -8,49 +8,59 @@ var AdventureNavigationView = Backbone.Marionette.ItemView.extend({
     },
 
     events: {
-        "click @ui.backButton": 'showPreviousStep',
-        "click @ui.nextButton": 'showNextStep',
-        "click @ui.startOverButton": 'startOver'
+        "click @ui.backButton": 'onShowPreviousStep',
+        "click @ui.nextButton": 'onShowNextStep',
+        "click @ui.startOverButton": 'onStartOver'
     },
 
     initialize: function(options) {
         this.app = options.app;
-        _.bindAll(this, 'lastStepHandler', 'backHandler');
-        this.app.vent.on('step:is:last', this.lastStepHandler);
-        this.app.vent.on('step:allow:back', this.backHandler);
+        _.bindAll(this, 'onStepChange', 'onStepChoiceSelect');
+        this.app.vent.on('step:change', this.onStepChange);
+        this.app.vent.on('step:choice:select', this.onStepChoiceSelect);
     },
 
-    showNextStep: function(event) {
+    onShowNextStep: function(event) {
         event.preventDefault();
-        this.app.vent.trigger('showNextStep');
+        this.app.vent.trigger('show:next:step');
     },
 
-    showPreviousStep: function(event) {
+    onShowPreviousStep: function(event) {
         event.preventDefault();
-        this.app.vent.trigger('showPreviousStep');
+        this.app.vent.trigger('show:previous:step');
     },
 
-    startOver: function(event) {
+    onStartOver: function(event) {
         event.preventDefault();
-        this.app.vent.trigger('startOver');
+        this.app.vent.trigger('start:over');
     },
 
-    // handlers
-    lastStepHandler: function(value) {
-        if (value) {
+    // handlers. TODO refactor..
+    onStepChange: function(step) {
+        if (step.get('is_last_step')) {
             this.ui.nextButton.hide();
         }
         else {
+            if (step.get('has_choices')) {
+                this.ui.nextButton.attr('disabled','disabled');
+            } else {
+                this.ui.nextButton.removeAttr('disabled');
+            }
             this.ui.nextButton.show();
         }
-    },
 
-    backHandler: function(value) {
-        if (value) {
+        if (step.get('has_back_step')) {
             this.ui.backButton.show();
         }
         else {
             this.ui.backButton.hide();
         }
+    },
+
+    onStepChoiceSelect: function(step) {
+        if (!step.get('is_last_step')) {
+            this.ui.nextButton.removeAttr('disabled');
+        }
     }
+
 });
