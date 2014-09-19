@@ -35,18 +35,20 @@ var AdventureNavigationView = Backbone.Marionette.ItemView.extend({
         this.app.vent.trigger('start:over');
     },
 
-    // handlers. TODO refactor..
+    // handlers. TODO refactor for a better readability?
     onStepChange: function(step) {
-        if (step.get('is_last_step')) {
-            this.ui.nextButton.hide();
+        if (step.get('has_choices')) {
+            this.ui.nextButton.attr('disabled','disabled');
+            this.ui.nextButton.show();
         }
         else {
-            if (step.get('has_choices')) {
-                this.ui.nextButton.attr('disabled','disabled');
-            } else {
-                this.ui.nextButton.removeAttr('disabled');
+            this.ui.nextButton.removeAttr('disabled');
+            if (step.get('has_next_step')) {
+                this.ui.nextButton.show();
             }
-            this.ui.nextButton.show();
+            else {
+                this.ui.nextButton.hide();
+            }
         }
 
         if (step.get('has_back_step')) {
