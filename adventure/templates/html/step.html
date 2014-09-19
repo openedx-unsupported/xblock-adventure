@@ -1,8 +1,14 @@
 <div class="step-content">
   {% if self.content %}<p>{{ self.content }}</p>{% endif %}
+
+  {% for name, c in ooyala_players %}
+  <div id="{{name}}" class="step-child"></div>
+  {% endfor %}
+
   {% for name, c in named_children %}
-  <div class="step-child">
-    {{c.body_html|safe}}
+  <div id="{{name}}" class="step-child">
+      {{c.body_html|safe}}
   </div>
   {% endfor %}
+
 </div>

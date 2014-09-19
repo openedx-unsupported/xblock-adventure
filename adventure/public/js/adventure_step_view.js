@@ -1,4 +1,4 @@
-var AdventureStepView = Backbone.Marionette.ItemView.extend({
+var AdventureStepView = Backbone.Marionette.LayoutView.extend({
     template: "#adventure-step-view-template",
 
     ui: {
@@ -13,6 +13,31 @@ var AdventureStepView = Backbone.Marionette.ItemView.extend({
         this.app = options.app;
         _.bindAll(this, 'getData', 'onChoiceSelect');
         this.registerHandlers();
+        this.initializeXBlockRegions();
+    },
+
+    initializeXBlockRegions: function() {
+        var self = this;
+        _.each(this.model.get('xblocks'), function(xblock) {
+            self.addRegion(xblock.id, "#" + xblock.id + ".step-child");
+        });
+    },
+
+    onRender: function() {
+        /* TODO refactoring: do not initialize the xblock like this, create a common XBlockView */
+        var self = this;
+        _.each(this.model.get('xblocks'), function(xblock) {
+            var options = xblock;
+            if (!self.model.get('is_studio')) {
+                options.xblock.useCurrentHost = true;
+                $('#'+options.id, self.el).xblock(options.xblock);
+            }
+            else {
+                $('#'+options.id, self.el).html(
+                    '<p>Ooyala-player child will be displayed in the LMS.</p>'
+                );
+            }
+        });
     },
 
     registerHandlers: function() {

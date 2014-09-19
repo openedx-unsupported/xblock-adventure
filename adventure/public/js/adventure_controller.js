@@ -3,7 +3,6 @@ var AdventureController = Backbone.Marionette.Controller.extend({
     initialize: function(options) {
         this.app = options.app;
         this.runtime = options.runtime;
-
         this._createFunctionAliases();
         _.bindAll(this, 'showNextStep', 'showPreviousStep', 'showStep', 'startOver');
         this.registerHandlers();

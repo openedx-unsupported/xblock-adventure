@@ -46,7 +46,7 @@ BLOCKS = [
 
 BLOCKS_CHILDREN = [
     'info = adventure:InfoBlock',
-    'step = adventure:StepBlock',
+    'step = adventure:StepBlock'
 ]
 
 setup(

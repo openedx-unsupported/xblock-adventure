@@ -28,6 +28,8 @@ import logging
 from mentoring.light_children import LightChild, Scope, String
 from mentoring import MCQBlock
 
+from ooyala_player import OoyalaPlayerLightChildBlock
+
 from .utils import render_template
 
 # Globals ###########################################################
@@ -52,10 +54,13 @@ class StepBlock(LightChild):
         context = context or {}
         context['as_template'] = False
 
-        fragment, named_children = self.get_children_fragment(context)
+        fragment, named_children = self.get_children_fragment(
+            context, not_instance_of=(OoyalaPlayerLightChildBlock,)
+        )
         fragment.add_content(render_template('templates/html/step.html', {
             'self': self,
             'named_children': named_children,
+            'ooyala_players': self.ooyala_players
         }))
         return self.xblock_container.fragment_text_rewriting(fragment)
 
@@ -65,6 +70,17 @@ class StepBlock(LightChild):
         Returns True if the current_step has choices.
         """
 
-        choices = [mcq for mcq in self.get_children_objects() if isinstance(mcq, MCQBlock)]
+        choices = [child for child in self.get_children_objects() if isinstance(child, MCQBlock)]
 
         return True if choices else False
+
+    @property
+    def ooyala_players(self):
+        """
+        Returns the ooyala player children
+        """
+
+        players = ([(child.name, child) for child in self.get_children_objects()
+                    if isinstance(child, OoyalaPlayerLightChildBlock)])
+
+        return players

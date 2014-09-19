@@ -181,6 +181,7 @@ class AdventureBlock(XBlockWithLightChildren):
 
             current_step = self._get_current_step()
             step_fragment = current_step.render()
+            # TODO move this in StepBlock itself?
             response = {
                 'result': 'success',
                 'step': {
@@ -188,9 +189,24 @@ class AdventureBlock(XBlockWithLightChildren):
                     'has_back_step': True if current_step.back else False,
                     'html': step_fragment.content,
                     'has_choices': current_step.has_choices,
-                    'is_last_step': self.current_step_name == self.steps[-1].name
+                    # TODO, to remove. how can we know to not display the what's happen button?
+                    'is_last_step': self.current_step_name == self.steps[-1].name,
+                    'xblocks': [],
+                    # this should only be once in the app config...
+                    'is_studio': getattr(self.xmodule_runtime, 'is_author_mode', False)
                 }
             }
+
+            for name, player in current_step.ooyala_players:
+                xblock = player.xblock_view()
+                xblock['data'] = {
+                    'step': current_step.name,
+                    'child': name
+                }
+                response['step']['xblocks'].append({
+                    'id': name,
+                    'xblock': xblock
+                })
 
         return response
 
@@ -224,7 +240,7 @@ class AdventureBlock(XBlockWithLightChildren):
     @lazy
     def has_steps(self):
         """
-        Check if thr adventure has steps configured.
+        Check if the adventure has steps configured.
         """
         return len(self.steps) > 0
 
@@ -232,8 +248,20 @@ class AdventureBlock(XBlockWithLightChildren):
         fragment = Fragment()
         # fragment, named_children = self.get_children_fragment(
         #     context, view_name='adventure_view',
-        #     not_instance_of=(TitleBlock, InfoBlock, StepBlock)
+        #     not_instance_of=(TitleBlock, InfoBlock)
         # )
+
+
+        # Check if the student view of a step child has been requested
+        context_step_name = context.get('step', None) if context else None
+        context_step_child_name = context.get('child', None) if context else None
+        if (context_step_name and
+            context_step_name == self.current_step_name and
+            context_step_child_name):
+            step = self._get_step_by_name(context_step_name)
+            for child in step.get_children_objects():
+                if child.name == context_step_child_name:
+                    return child.student_view(context)
 
         # First access, set the current_step to the beginning of the adventure
         if not self.current_step_name and self.has_steps:
@@ -255,6 +283,8 @@ class AdventureBlock(XBlockWithLightChildren):
             self.runtime.local_resource_url(self, 'public/js/vendor/backbone-min.js'))
         fragment.add_javascript_url(
             self.runtime.local_resource_url(self, 'public/js/vendor/backbone.marionette.min.js'))
+        fragment.add_javascript_url(
+            self.runtime.local_resource_url(self, 'public/js/vendor/jquery.xblock.js'))
 
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/adventure.js'))
         fragment.add_javascript_url(
@@ -392,9 +422,9 @@ class AdventureBlock(XBlockWithLightChildren):
                     'result': 'success'
                 }
 
-                # Fix to get the xblock initialzed in edx/XBlock
+                # Fix to get the xblock initialized in edx/XBlock
                 adventure_id = self.adventure_id
-                if hasattr(adventure_id, '__call__'):
+                if callable(adventure_id):
                     self.adventure_id = adventure_id()
 
                 self.xml_content = etree.tostring(content, pretty_print=True)
@@ -407,3 +437,8 @@ class AdventureBlock(XBlockWithLightChildren):
         return render_template('templates/xml/adventure_default.xml', {
             'self': self
         })
+
+    @staticmethod
+    def workbench_scenarios():
+        """A canned scenario for display in the workbench."""
+        return [("Adventure scenario", "<vertical_demo><adventure/></vertical_demo>")]
