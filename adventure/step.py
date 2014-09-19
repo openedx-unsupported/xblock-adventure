@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (C) 2014 OpenCraft
+# Copyright (C) 2014 edX
 #
 # Authors:
 #          Alan Boudreault <alan@alanb.ca>
@@ -45,6 +45,7 @@ class StepBlock(LightChild):
     content = String(help="Text of the info to provide if needed", scope=Scope.content, default="")
     name = String(help="Name of the step", scope=Scope.content, default=None)
     back = String(help="Name of the back step", scope=Scope.content, default=None)
+    next = String(help="Name of the next step", scope=Scope.content, default=None)
     has_children = True
 
     def render(self, context=None):
@@ -77,7 +78,10 @@ class StepBlock(LightChild):
     @property
     def ooyala_players(self):
         """
-        Returns the ooyala player children
+        Returns the ooyala player children.
+
+        TODO: This could be refactored:
+              See https://github.com/edx-solutions/xblock-adventure/pull/1/files#r17821141
         """
 
         players = ([(child.name, child) for child in self.get_children_objects()

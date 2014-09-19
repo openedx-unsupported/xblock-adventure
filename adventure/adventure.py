@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (C) 2014 OpenCraft
+# Copyright (C) 2014 edX
 #
 # Authors:
 #          Alan Boudreault <alan@alanb.ca>
@@ -66,6 +66,22 @@ class AdventureBlock(XBlockWithLightChildren):
     display_name = String(help="Display name of the component", default="Adventure",
                           scope=Scope.settings)
 
+    CSS_URLS = [
+        'public/css/adventure.css'
+    ]
+
+    JS_URLS = [
+        'public/js/vendor/underscore-min.js',
+        'public/js/vendor/backbone-min.js',
+        'public/js/vendor/backbone.marionette.min.js',
+        'public/js/vendor/jquery.xblock.js',
+        'public/js/adventure.js',
+        'public/js/adventure_controller.js',
+        'public/js/adventure_step_view.js',
+        'public/js/adventure_navigation_view.js',
+        'public/js/adventure_models.js'
+    ]
+
     JS_TEMPLATES = [
         ('adventure-step-view', 'templates/html/adventure_step_view.html'),
         ('adventure-navigation-view', 'templates/html/adventure_navigation_view.html'),
@@ -91,12 +107,9 @@ class AdventureBlock(XBlockWithLightChildren):
         if next_step_name:
             return self._get_step_by_name(next_step_name)
 
-        current_step_found = False
-        for step in self.steps:
-            if current_step_found:
-                return step
-            elif step.name == self.current_step_name:
-                current_step_found = True
+        current_step = self._get_current_step()
+        if current_step and current_step.next and not current_step.has_choices:
+            return self._get_step_by_name(current_step.next)
 
         return None
 
@@ -129,6 +142,7 @@ class AdventureBlock(XBlockWithLightChildren):
         * All step names must be unique.
         * The first step name must be "first"
         * All back attribute must be a valid step name.
+        * All next attribute must be a valid step name.
         * All mcq must contain choices.
         * All mcq choice values must be a valid step name.
 
@@ -142,6 +156,7 @@ class AdventureBlock(XBlockWithLightChildren):
                 raise ValueError('All steps must be a unique.')
             step_names.append(name)
 
+        # TODO remove this constraint everywhere, use steps[0].name
         if step_names and step_names[0] != "first":
             raise ValueError('The first step name must be "first"')
 
@@ -150,6 +165,11 @@ class AdventureBlock(XBlockWithLightChildren):
             back = step.attrib.get('back', None)
             if back is not None and back not in step_names:
                 raise ValueError('All step "back" attributes must be a valid step name.')
+
+            # Check if the next attribute is valid
+            next = step.attrib.get('next', None)
+            if next is not None and next not in step_names:
+                raise ValueError('All step "next" attributes must be a valid step name.')
 
             # Check if the mcq choice values are valid
             mcq = step.find('mcq')
@@ -181,16 +201,15 @@ class AdventureBlock(XBlockWithLightChildren):
 
             current_step = self._get_current_step()
             step_fragment = current_step.render()
-            # TODO move this in StepBlock itself?
+            # TODO move this rendering in the StepBlock itself
             response = {
                 'result': 'success',
                 'step': {
                     'name': current_step.name,
                     'has_back_step': True if current_step.back else False,
+                    'has_next_step': True if current_step.next else False,
                     'html': step_fragment.content,
                     'has_choices': current_step.has_choices,
-                    # TODO, to remove. how can we know to not display the what's happen button?
-                    'is_last_step': self.current_step_name == self.steps[-1].name,
                     'xblocks': [],
                     # this should only be once in the app config...
                     'is_studio': getattr(self.xmodule_runtime, 'is_author_mode', False)
@@ -246,11 +265,6 @@ class AdventureBlock(XBlockWithLightChildren):
 
     def student_view(self, context):
         fragment = Fragment()
-        # fragment, named_children = self.get_children_fragment(
-        #     context, view_name='adventure_view',
-        #     not_instance_of=(TitleBlock, InfoBlock)
-        # )
-
 
         # Check if the student view of a step child has been requested
         context_step_name = context.get('step', None) if context else None
@@ -265,7 +279,7 @@ class AdventureBlock(XBlockWithLightChildren):
 
         # First access, set the current_step to the beginning of the adventure
         if not self.current_step_name and self.has_steps:
-            self.current_step_name = self.steps[0].name
+            self.current_step_name = 'first'
 
         info_fragment = None
         if self.info:
@@ -276,26 +290,12 @@ class AdventureBlock(XBlockWithLightChildren):
                 'self': self,
                 'info_fragment': info_fragment,
             }))
-        fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/adventure.css'))
-        fragment.add_javascript_url(
-            self.runtime.local_resource_url(self, 'public/js/vendor/underscore-min.js'))
-        fragment.add_javascript_url(
-            self.runtime.local_resource_url(self, 'public/js/vendor/backbone-min.js'))
-        fragment.add_javascript_url(
-            self.runtime.local_resource_url(self, 'public/js/vendor/backbone.marionette.min.js'))
-        fragment.add_javascript_url(
-            self.runtime.local_resource_url(self, 'public/js/vendor/jquery.xblock.js'))
 
-        fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/adventure.js'))
-        fragment.add_javascript_url(
-            self.runtime.local_resource_url(self, 'public/js/adventure_controller.js'))
-        fragment.add_javascript_url(
-            self.runtime.local_resource_url(self, 'public/js/adventure_step_view.js'))
-        fragment.add_javascript_url(
-            self.runtime.local_resource_url(self, 'public/js/adventure_navigation_view.js'))
+        for css_url in self.CSS_URLS:
+            fragment.add_css_url(self.runtime.local_resource_url(self, css_url))
 
-        fragment.add_javascript_url(
-            self.runtime.local_resource_url(self,'public/js/adventure_models.js'))
+        for js_url in self.JS_URLS:
+            fragment.add_javascript_url(self.runtime.local_resource_url(self, js_url))
 
         context={}
         for template in self.JS_TEMPLATES:
@@ -396,7 +396,6 @@ class AdventureBlock(XBlockWithLightChildren):
     def studio_submit(self, submissions, suffix=''):
         log.debug(u'Received studio submissions: {}'.format(submissions))
 
-        success = True
         xml_content = submissions['xml_content']
         try:
             content = etree.parse(StringIO(xml_content))
@@ -412,7 +411,6 @@ class AdventureBlock(XBlockWithLightChildren):
                 steps = root.findall('step')
                 self._validate_steps(steps)
             except ValueError as e:
-                success = False
                 response = {
                     'result': 'error',
                     'message': e.message

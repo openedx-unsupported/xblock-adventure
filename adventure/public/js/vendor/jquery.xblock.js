@@ -212,7 +212,7 @@
 
         getLmsDomain: function(options) {
             if (options.useCurrentHost) {
-                return this.location.hostname;
+                return this.location.hostname + ':' + this.location.port;
             }
             else {
                 return options.lmsSubDomain + '.' + options.baseDomain;
