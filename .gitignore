@@ -1,0 +1,5 @@
+*~
+*.pyc
+/xblock_adventure.egg-info
+/dist
+/templates
