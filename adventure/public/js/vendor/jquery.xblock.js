@@ -22,9 +22,30 @@
 
 (function($) {
 
+    function getLink(linkDom){
+        var link_templates = [
+            /^\/courses\/([^\/]+\/[^\/]+)\/([^\/]+)\/jump_to\/(.+)/,
+            /^\/courses\/([^\/]+\/[^\/]+)\/([^\/]+)\/jump_to_id\/(.+)/
+        ];
+        var link_url = $(linkDom).attr('href');
+        for (var i = 0; i < link_templates.length; i++) {
+            var template = link_templates[i];
+            var match = template.exec(link_url);
+            if (match) {
+                return {
+                    course_id: match[1],
+                    block_type: match[2],
+                    block_id: match[3]
+                };
+            }
+        }
+    }
+
+    if (typeof $.xblock !== "undefined")
+        return;
+
     $.xblock = {
         window: window,
-
         location: location,
 
         default_options: {
@@ -35,9 +56,12 @@
                                  // (eg: `example.com`, defaults to current domain)
             lmsSubDomain: 'lms', // The subdomain part for the LMS (eg, `lms` for `lms.example.com`)
             lmsSecureURL: false, // Is the LMS on HTTPS?
-            useCurrentHost: false, // set to true to load xblock using the current location.hostname
+            useCurrentHost: false, // set to true to load xblock using the current location.hostnam
+            disableGlobalOptions: false, // set to true to disable the global_options behavior.
             data: {}              // additional data to send to student_view. send as GET parameters
         },
+
+        global_options: null,
 
         loadResources: function(resources, options, root) {
             var $this = this,
@@ -160,20 +184,15 @@
         },
 
         eventsInit: function(options, root) {
-            // Catch jump_to_id URLs
+            // Catch jump_to and jump_to_id URLs
             $('a', root).not('.xblock-jump').each(function(index, linkDOM) {
-                var link_url = $(linkDOM).attr('href'),
-                    link_found = /^\/courses\/([^\/]+\/[^\/]+)\/([^\/]+)\/jump_to_id\/(.+)/.exec(link_url);
+                var link_found = getLink(linkDOM);
 
                 if (link_found) {
-                    var course_id = link_found[1],
-                        block_type = link_found[2],
-                        block_id = link_found[3];
-
                     $(linkDOM).on('click', function(e) {
                         e.preventDefault();
-                        console.log(course_id, block_type, block_id);
-                        $(linkDOM).trigger('xblock_jump', [course_id, block_type, block_id]);
+                        console.log(link_found.course_id, link_found.block_type, link_found.block_id);
+                        $(linkDOM).trigger('xblock_jump', [link_found.course_id, link_found.block_type, link_found.block_id]);
                     });
                     $(linkDOM).addClass('xblock-jump');
                 }
@@ -291,6 +310,23 @@
 
             if (!options.baseDomain) {
                 options.baseDomain = this.location.host;
+            }
+
+            if (!options.disableGlobalOptions) {
+                if (this.global_options == null) {
+                    this.global_options = {
+                        sessionId: options.sessionId,
+                        baseDomain: options.baseDomain,
+                        lmsSubDomain: options.lmsSubDomain,
+                        useCurrentHost: options.useCurrentHost
+                    }
+                } else {
+                    options = $.extend({}, options, this.global_options);
+                    console.log('Forcing the use of sessionId: ' + options.sessionId);
+                    console.log('Forcing the use of baseDomain: ' + options.baseDomain);
+                    console.log('Forcing the use of lmsSubDomain: ' + options.lmsSubDomain);
+                    console.log('Forcing the use of useCurrentHost: ' + options.useCurrentHost);
+                }
             }
 
             return this.init(options, root);
