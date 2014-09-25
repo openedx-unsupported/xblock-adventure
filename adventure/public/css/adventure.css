@@ -1,13 +1,50 @@
 .adventure .navigation-view {
+    position: relative;
     margin-top: 20px;
+}
+
+.adventure .navigation-view .navigation-back-next-buttons {
+    text-align: center;
 }
 
 .adventure .navigation-view .navigation-next {
     text-align: center;
 }
 
-.adventure .step-view .step,
-.adventure .step-view .step-child
-{
-    margin-top: 10px;
+.adventure .navigation-view .navigation-start-over {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+}
+
+.adventure .step-body {
+    padding: 1em;
+    border: 4px solid #eee;
+}
+
+.adventure .step-view {
+    padding: 1em;
+}
+
+.adventure .step-child {
+    margin-bottom: 1em;
+}
+
+.adventure .ooyala-child {
+    padding: 1.5em 0;
+    margin: 1.5em 0;
+    border: 1px solid #ccc;
+    border-width: 1px 0;
+}
+
+.adventure .question {
+    margin-bottom: 1em;
+}
+
+.adventure .choice-label {
+    margin-left: 2em;
+}
+
+.adventure .choice-selector {
+    margin-right: 1em;
 }
