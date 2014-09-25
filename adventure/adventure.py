@@ -212,7 +212,7 @@ class AdventureBlock(XBlockWithLightChildren):
                     'has_choices': current_step.has_choices,
                     'xblocks': [],
                     # this should only be once in the app config...
-                    'is_studio': getattr(self.xmodule_runtime, 'is_author_mode', False)
+                    'is_studio': getattr(getattr(self, 'xmodule_runtime', None), 'is_author_mode', False)
                 }
             }
 
@@ -439,4 +439,4 @@ class AdventureBlock(XBlockWithLightChildren):
     @staticmethod
     def workbench_scenarios():
         """A canned scenario for display in the workbench."""
-        return [("Adventure scenario", "<vertical_demo><adventure/></vertical_demo>")]
+        return [("Adventure scenario", unicode(render_template('templates/xml/adventure_default.xml')))]
