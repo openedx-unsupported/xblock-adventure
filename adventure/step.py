@@ -56,7 +56,8 @@ class StepBlock(LightChild):
         context['as_template'] = False
 
         fragment, named_children = self.get_children_fragment(
-            context, not_instance_of=(OoyalaPlayerLightChildBlock,)
+            context, view_name='mentoring_view',
+            not_instance_of=(OoyalaPlayerLightChildBlock,)
         )
         fragment.add_content(render_template('templates/html/step.html', {
             'self': self,
