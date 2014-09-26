@@ -1,5 +1,6 @@
 from .base_test import AdventureBaseTest
 
+
 class TestSeleniumTest(AdventureBaseTest):
     def assert_hidden(self, elem):
         self.assertFalse(elem.is_displayed())
@@ -11,7 +12,6 @@ class TestSeleniumTest(AdventureBaseTest):
     def assert_clickable(self, elem):
         self.assertTrue(elem.is_displayed())
         self.assertTrue(elem.is_enabled())
-
 
     class _GetChoices(object):
         def __init__(self, adventure):
@@ -100,7 +100,8 @@ class TestSeleniumTest(AdventureBaseTest):
         return self._assert_linear_step(adventure, "You die in a blaze.")
 
     def assert_at_good_end(self, adventure):
-        return self._assert_linear_step(adventure,
+        return self._assert_linear_step(
+            adventure,
             "Congratulations! You have just vanquished a dragon with your bare hands! (Unbelievable, isn't it?)")
 
     def assert_at_adventure_end(self, adventure):
@@ -131,7 +132,6 @@ class TestSeleniumTest(AdventureBaseTest):
         controls['next'].click()
 
         self.assert_at_adventure_end(adventure)
-
 
     def test_really_long_seession_with_step_backs_and_persistence(self):
         adventure = self.go_to_page("Branching Adventure")

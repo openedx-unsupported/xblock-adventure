@@ -15,6 +15,7 @@ from workbench.test.selenium_test import SeleniumTest
 
 # Classes ###########################################################
 
+
 def SeleniumBaseTest(module_name, default_css_selector, relative_scenario_path='xml'):
     base_dir = os.path.dirname(os.path.realpath(sys.modules[module_name].__file__))
     xml_path = os.path.join(base_dir, relative_scenario_path)

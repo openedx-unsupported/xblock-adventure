@@ -34,6 +34,7 @@ log = logging.getLogger(__name__)
 
 # Classes ###########################################################
 
+
 class InfoBlock(LightChild):
     """
     Info block for adventure description. It can contains html children.

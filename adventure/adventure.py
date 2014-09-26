@@ -182,7 +182,6 @@ class AdventureBlock(XBlockWithLightChildren):
                     if value is None or value not in step_names:
                         raise ValueError('All mcq choice values must be a valid step name.')
 
-
     def _render_current_step(self):
         """
         Render the json response of the current step.
@@ -270,8 +269,8 @@ class AdventureBlock(XBlockWithLightChildren):
         context_step_name = context.get('step', None) if context else None
         context_step_child_name = context.get('child', None) if context else None
         if (context_step_name and
-            context_step_name == self.current_step_name and
-            context_step_child_name):
+                context_step_name == self.current_step_name and
+                context_step_child_name):
             step = self._get_step_by_name(context_step_name)
             for child in step.get_children_objects():
                 if child.name == context_step_child_name:
@@ -297,7 +296,7 @@ class AdventureBlock(XBlockWithLightChildren):
         for js_url in self.JS_URLS:
             fragment.add_javascript_url(self.runtime.local_resource_url(self, js_url))
 
-        context={}
+        context = {}
         for template in self.JS_TEMPLATES:
             fragment.add_resource(
                 render_js_template(template[1], context=context, id=template[0]),
@@ -317,7 +316,7 @@ class AdventureBlock(XBlockWithLightChildren):
             return {'result': 'error', 'message': 'Missing event_type in JSON data'}
 
         self.runtime.publish(self, event_type, data)
-        return {'result':'success'}
+        return {'result': 'success'}
 
     @XBlock.json_handler
     def submit(self, submissions, suffix=''):
