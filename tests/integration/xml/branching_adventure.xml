@@ -1,48 +1,50 @@
 <adventure display_name="Nav tooltip title">
-    <title>Default Title</title>
-    <info>Adventure description.</info>
+    <title>Branching Adventure</title>
+    <info>A familiar encounter from 1976</info>
 
     <step name="first" next="second">
-      This is step 1. Continue to to see what's happen.
+      Welcome to adventure!!
     </step>
 
     <step name="second" back="first">
-      <html><strong>This is step 2.</strong></html>
+      <html>You enter the dragon's cave. The age-old beast stands before you!</html>
       <mcq type="choices">
-        <question>How do you feel today?</question>
-        <choice value="well">Very well</choice>
-        <choice value="tired">Tired</choice>
+        <question>What do you do?</question>
+        <choice value="slay">Kill dragon</choice>
+        <choice value="flee">Leave</choice>
       </mcq>
     </step>
 
-    <step name="well" back="second">
-      Since you are in shape today, let's look at a difficult question.
+    <step name="slay" back="second">
       <mcq type="choices">
-        <question>Life, the Universe and Everything</question>
-        <choice value="right">42</choice>
-        <choice value="wrong">I don't know</choice>
+        <question>With what? Your bare hands?</question>
+        <choice value="confident">Yes</choice>
+        <choice value="hesitating">Um... no..</choice>
       </mcq>
     </step>
 
-    <step name="tired" back="second">
-      Let's go for an easy question.
-      <mcq type="choices">
-        <question>2+2=</question>
-        <choice value="right">4</choice>
-        <choice value="wrong">5</choice>
-      </mcq>
+    <step name="flee" next="burn">
+      As you turn your back to the dragon, a hellish flame engulfs you.
     </step>
 
-    <step name="wrong" next="last">
-      <html><strong>Sorry, you should review your notes.</strong></html>
+    <step name="hesitating" next="burn">
+      The dragon feels your hesitation and attacks.
     </step>
 
-    <step name="right" next="last">
-      <html><strong>Congratulations!! :)</strong></html>
+    <step name="burn" next="last">
+      <html><strong>You die in a blaze.</strong></html>
+    </step>
+
+    <step name="confident" next="last">
+      <html>
+        <strong>Congratulations!</strong>
+        You have just vanquished a dragon with your bare hands!
+        <em>(Unbelievable, isn't it?)</em>
+      </html>
     </step>
 
     <step name="last">
-      <html><strong>End of the adventure. Thank you!</strong></html>
+      <html><strong>End of the adventure. I hope you enjoyed it!</strong></html>
     </step>
 
 </adventure>
