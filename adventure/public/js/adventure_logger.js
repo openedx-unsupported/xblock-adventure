@@ -14,6 +14,14 @@ var AdventureLogger = Backbone.Marionette.Controller.extend({
         this.app.vent.on("show:next:step", this.logWentForward);
         this.app.vent.on("show:previous:step", this.logWentBackward);
         this.app.vent.on("start:over", this.logStartedOver);
+
+        $('video').on('playing', this.logVideoStarted);
+    },
+
+    logVideoStarted: function() {
+        this._publish_event({
+            event_type: "xblock.adventure.video-started",
+        });
     },
 
     logStepShown: function(step) {
