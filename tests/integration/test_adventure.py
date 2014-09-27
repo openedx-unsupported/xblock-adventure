@@ -133,7 +133,7 @@ class TestSeleniumTest(AdventureBaseTest):
 
         self.assert_at_adventure_end(adventure)
 
-    def test_really_long_seession_with_step_backs_and_persistence(self):
+    def test_really_long_session_with_step_backs_and_persistence(self):
         adventure = self.go_to_page("Branching Adventure")
         controls = self.assert_at_step_1(adventure)
         controls['next'].click()

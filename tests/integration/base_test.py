@@ -18,7 +18,7 @@ from workbench.test.selenium_test import SeleniumTest
 
 def SeleniumBaseTest(module_name, default_css_selector, relative_scenario_path='xml'):
     base_dir = os.path.dirname(os.path.realpath(sys.modules[module_name].__file__))
-    xml_path = os.path.join(base_dir, relative_scenario_path)
+    scenario_path = os.path.join(base_dir, relative_scenario_path)
 
     def _load_resource(resource_path):
         """
@@ -36,7 +36,7 @@ def SeleniumBaseTest(module_name, default_css_selector, relative_scenario_path='
         return template.render(Context(context))
 
     def _load_scenarios_from_path(xml_path):
-        scenarios = []
+        list_of_scenarios = []
         if os.path.isdir(xml_path):
             for template in os.listdir(xml_path):
                 if not template.endswith('.xml'):
@@ -45,8 +45,8 @@ def SeleniumBaseTest(module_name, default_css_selector, relative_scenario_path='
                 title = identifier.replace('_', ' ').title()
                 template_path = os.path.join(relative_scenario_path, template)
                 scenario = unicode(_render_template(template_path, {"url_name": identifier}))
-                scenarios.append((identifier, title, scenario))
-        return scenarios
+                list_of_scenarios.append((identifier, title, scenario))
+        return list_of_scenarios
 
     class SeleniumBaseTest(SeleniumTest):
         def setUp(self):
@@ -55,7 +55,7 @@ def SeleniumBaseTest(module_name, default_css_selector, relative_scenario_path='
             # Use test scenarios
             self.browser.get(self.live_server_url)  # Needed to load tests once
             scenarios.SCENARIOS.clear()
-            scenarios_list = _load_scenarios_from_path(xml_path)
+            scenarios_list = _load_scenarios_from_path(scenario_path)
             for identifier, title, xml in scenarios_list:
                 scenarios.add_xml_scenario(identifier, title, xml)
                 self.addCleanup(scenarios.remove_scenario, identifier)
