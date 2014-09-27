@@ -77,6 +77,7 @@ class AdventureBlock(XBlockWithLightChildren):
         'public/js/vendor/jquery.xblock.js',
         'public/js/adventure.js',
         'public/js/adventure_controller.js',
+        'public/js/adventure_logger.js',
         'public/js/adventure_step_view.js',
         'public/js/adventure_navigation_view.js',
         'public/js/adventure_models.js'
@@ -314,6 +315,9 @@ class AdventureBlock(XBlockWithLightChildren):
             event_type = data.pop('event_type')
         except KeyError as e:
             return {'result': 'error', 'message': 'Missing event_type in JSON data'}
+
+        data['user_id'] = self.scope_ids.user_id
+        data['component_id'] = self.adventure_id
 
         self.runtime.publish(self, event_type, data)
         return {'result': 'success'}
