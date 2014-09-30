@@ -208,6 +208,7 @@ class AdventureBlock(XBlockWithLightChildren):
                     'name': current_step.name,
                     'has_back_step': True if current_step.back else False,
                     'has_next_step': True if current_step.next else False,
+                    'can_start_over': False if self.current_step_name == 'first' else True,
                     'html': step_fragment.content,
                     'has_choices': current_step.has_choices,
                     'xblocks': [],
