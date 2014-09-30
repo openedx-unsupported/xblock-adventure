@@ -1,7 +1,7 @@
 # Adventure XBlock
 
 Adventure XBlock is an XBlock for creating a simple
-[chose your own adventure][wikipedia-cyoa] style simulation.
+[chose your own adventure][wiki-cyoa] style simulation.
 
 It presents the user with a branching sequence of steps,
 each which can contain other `XBlockLightChildrens`.
