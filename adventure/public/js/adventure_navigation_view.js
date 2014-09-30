@@ -57,6 +57,14 @@ var AdventureNavigationView = Backbone.Marionette.ItemView.extend({
         else {
             this.ui.backButton.hide();
         }
+
+        if (step.get('can_start_over')) {
+            this.ui.startOverButton.show();
+        }
+        else {
+            this.ui.startOverButton.hide();
+        }
+
     },
 
     onStepChoiceSelect: function(step) {

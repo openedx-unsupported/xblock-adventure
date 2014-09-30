@@ -3,6 +3,7 @@ var AdventureStepModel = Backbone.Model.extend({
         name: '',
         has_back_step: false,
         has_next_step: false,
+        can_start_over: false,
         html: '',
         has_choices: false,
         xblocks: [],
