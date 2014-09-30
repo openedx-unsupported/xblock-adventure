@@ -27,6 +27,7 @@ import logging
 
 from mentoring.light_children import LightChild, Scope, String
 from mentoring import MCQBlock
+from mentoring.step import StepParentMixin
 
 from ooyala_player import OoyalaPlayerLightChildBlock
 
@@ -39,9 +40,12 @@ log = logging.getLogger(__name__)
 # Classes ###########################################################
 
 
-class StepBlock(LightChild):
+class StepBlock(LightChild, StepParentMixin):
     """
     A representation of an adventure step.
+
+    Note that it is also a StepParentMixin, as MCQs are of StepMixin,
+    requiring there parents to be so.
     """
     content = String(help="Text of the info to provide if needed", scope=Scope.content, default="")
     name = String(help="Name of the step", scope=Scope.content, default=None)
