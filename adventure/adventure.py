@@ -24,6 +24,7 @@
 # Imports ###########################################################
 
 import logging
+import textwrap
 from uuid import uuid4
 
 from lxml import etree
@@ -47,6 +48,66 @@ from .utils import load_resource, render_template, render_js_template
 
 log = logging.getLogger(__name__)
 
+DEFAULT_XML_CONTENT = textwrap.dedent("""\
+<adventure display_name="Nav tooltip title">
+    <title>Title of Simulation</title>
+    <info>Description of overall goal of simulation such as walk Mary through understanding how her actions made a situation really hard on the team and impacted the client relationship:</info>
+
+    <step name="first">
+      Mary wants to hear your idea.
+      <mcq type="choices">
+        <question>What idea will you suggest?</question>
+        <choice value="last">Tell Mary about my great idea that matches her perception.</choice>
+        <choice value="second">Tell Mary about my other idea that doesn't match her perception.</choice>
+      </mcq>
+    </step>
+
+    <step name="second">
+      <html>
+        <strong>FEEDBACK</strong>
+        <p>Not quite. That wasn't such a good idea. Mary feels confused because you stated something as a fact that doesn't match her perception...</p>
+      </html>
+      <ooyala-player/>
+      <html>
+        <p>You need to see if you can get the conversation back on track.</p>
+      </html>
+      <mcq type="choices">
+        <question>What will you say next?</question>
+        <choice value="last">(a) Tell me what you think Bob's perception of the meeting was.</choice>
+        <choice value="third">(b) I can understand how you thought that, but let's discuss what really happened.</choice>
+      </mcq>
+    </step>
+
+    <step name="third" back="second">
+      <html>
+        <strong>FEEDBACK</strong>
+        <p>Not quite. It's OK for Mary to show some emotion. Better to give her the space to do so and keep engaged in a conversation...</p>
+      </html>
+      <ooyala-player/>
+      <html>
+        <p>Would be great to have a detailed feedback here following the video above... clarifying what happened and why.
+        Things to think about as they are prompted to go back and make a better and correct choice to keep the conversation on track.</p>
+        <br/>
+        <p>Think about this feedback and let's go back and start the conversation again.</p>
+      </html>
+    </step>
+
+    <step name="last">
+      <html>
+        <strong>FEEDBACK</strong>
+        <p>Great. Mary agrees with you.</p>
+      </html>
+      <ooyala-player/>
+      <html>
+      <p>
+        Text to be written by curse creators that says the user has reached a successful outcome and directs them to continue
+        on with lesson content.
+      </p>
+      </html>
+    </step>
+
+</adventure>
+""")
 
 # Classes ###########################################################
 
@@ -59,7 +120,7 @@ class AdventureBlock(XBlockWithLightChildren):
     """
     adventure_id = String(scope=Scope.settings, default=lambda: uuid4().hex)
 
-    xml_content = String(help="XML content", default='', scope=Scope.content)
+    xml_content = String(help="XML content", scope=Scope.content, default=DEFAULT_XML_CONTENT)
     current_step_name = String(help="Keep track of the student assessment progress.",
                                default='', scope=Scope.user_state)
 
@@ -217,14 +278,17 @@ class AdventureBlock(XBlockWithLightChildren):
                 }
             }
 
-            for name, player in current_step.ooyala_players:
-                xblock = player.xblock_view()
+            _, children = current_step.get_step_fragment_children()
+            for name, child, is_ooyala_player in children:
+                if not is_ooyala_player:
+                    continue
+                xblock = child.xblock_view()
                 xblock['data'] = {
                     'step': current_step.name,
-                    'child': name
+                    'child': child.name
                 }
                 response['step']['xblocks'].append({
-                    'id': name,
+                    'id': child.name,
                     'xblock': xblock
                 })
 
@@ -382,7 +446,7 @@ class AdventureBlock(XBlockWithLightChildren):
         fragment = Fragment()
         fragment.add_content(render_template('templates/html/adventure_edit.html', {
             'self': self,
-            'xml_content': self.xml_content or self.default_xml_content
+            'xml_content': self.xml_content
         }))
         fragment.add_javascript_url(
             self.runtime.local_resource_url(self, 'public/js/adventure.js'))
@@ -430,12 +494,6 @@ class AdventureBlock(XBlockWithLightChildren):
 
         log.debug(u'Response from Studio: {}'.format(response))
         return response
-
-    @property
-    def default_xml_content(self):
-        return render_template('templates/xml/adventure_default.xml', {
-            'self': self
-        })
 
     @staticmethod
     def workbench_scenarios():

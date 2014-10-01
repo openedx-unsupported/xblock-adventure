@@ -55,13 +55,10 @@ class StepBlock(LightChild):
         context = context or {}
         context['as_template'] = False
 
-        fragment, named_children = self.get_children_fragment(
-            context, not_instance_of=(OoyalaPlayerLightChildBlock,)
-        )
+        fragment, children = self.get_step_fragment_children(context)
         fragment.add_content(render_template('templates/html/step.html', {
             'self': self,
-            'named_children': named_children,
-            'ooyala_players': self.ooyala_players
+            'children': children
         }))
         return self.xblock_container.fragment_text_rewriting(fragment)
 
@@ -75,16 +72,11 @@ class StepBlock(LightChild):
 
         return True if choices else False
 
-    @property
-    def ooyala_players(self):
-        """
-        Returns the ooyala player children.
+    def get_step_fragment_children(self, context={}):
+        children = []
 
-        TODO: This could be refactored:
-              See https://github.com/edx-solutions/xblock-adventure/pull/1/files#r17821141
-        """
+        fragment, named_children = self.get_children_fragment(context)
+        for name, child in named_children:
+            children.append((name, child, isinstance(child, OoyalaPlayerLightChildBlock)))
 
-        players = ([(child.name, child) for child in self.get_children_objects()
-                    if isinstance(child, OoyalaPlayerLightChildBlock)])
-
-        return players
+        return (fragment, children)
