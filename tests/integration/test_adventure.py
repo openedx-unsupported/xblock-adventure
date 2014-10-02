@@ -47,19 +47,18 @@ class TestSeleniumTest(AdventureBaseTest):
             'start-over': adventure.find_element_by_css_selector(".navigation-start-over"),
         }
 
-    def _assert_linear_step(self, adventure, text):
-        self.wait_until_text_in(text, adventure)
+    def assert_at_step_1(self, adventure):
+        self.wait_until_text_in("Welcome to adventure!!", adventure)
         controls = self.get_nav_controls(adventure)
 
-        self.assert_persistent_elements_present(adventure)
+        self.assertIn("Branching Adventure", adventure.text)
+        self.assertIn("A familiar encounter from 1976", adventure.text)
+        self.assertNotIn("Start Over", adventure.text)
 
         self.assert_hidden(controls['back'])
         self.assert_clickable(controls['next'])
 
         return controls
-
-    def assert_at_step_1(self, adventure):
-        return self._assert_linear_step(adventure, "Welcome to adventure!!")
 
     def assert_at_step_2(self, adventure):
         self.wait_until_text_in("You enter the dragon's cave. The age-old beast stands before you!", adventure)
@@ -87,6 +86,17 @@ class TestSeleniumTest(AdventureBaseTest):
         choices = self._GetChoices(adventure)
         self.assertEquals(choices.state, {"Yes": False, "Um... no..": False})
         controls['choices'] = choices
+
+        return controls
+
+    def _assert_linear_step(self, adventure, text):
+        self.wait_until_text_in(text, adventure)
+        controls = self.get_nav_controls(adventure)
+
+        self.assert_persistent_elements_present(adventure)
+
+        self.assert_hidden(controls['back'])
+        self.assert_clickable(controls['next'])
 
         return controls
 
