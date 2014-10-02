@@ -38,6 +38,7 @@ log = logging.getLogger(__name__)
 
 # Classes ###########################################################
 
+
 class StepBlock(LightChild):
     """
     A representation of an adventure step.

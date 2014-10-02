@@ -1,0 +1,50 @@
+<adventure display_name="Nav tooltip title">
+    <title>Branching Adventure</title>
+    <info>A familiar encounter from 1976</info>
+
+    <step name="first" next="second">
+      Welcome to adventure!!
+    </step>
+
+    <step name="second" back="first">
+      <html>You enter the dragon's cave. The age-old beast stands before you!</html>
+      <mcq type="choices">
+        <question>What do you do?</question>
+        <choice value="slay">Kill dragon</choice>
+        <choice value="flee">Leave</choice>
+      </mcq>
+    </step>
+
+    <step name="slay" back="second">
+      <mcq type="choices">
+        <question>With what? Your bare hands?</question>
+        <choice value="confident">Yes</choice>
+        <choice value="hesitating">Um... no..</choice>
+      </mcq>
+    </step>
+
+    <step name="flee" next="burn">
+      As you turn your back to the dragon, a hellish flame engulfs you.
+    </step>
+
+    <step name="hesitating" next="burn">
+      The dragon feels your hesitation and attacks.
+    </step>
+
+    <step name="burn" next="last">
+      <html><strong>You die in a blaze.</strong></html>
+    </step>
+
+    <step name="confident" next="last">
+      <html>
+        <strong>Congratulations!</strong>
+        You have just vanquished a dragon with your bare hands!
+        <em>(Unbelievable, isn't it?)</em>
+      </html>
+    </step>
+
+    <step name="last">
+      <html><strong>End of the adventure. I hope you enjoyed it!</strong></html>
+    </step>
+
+</adventure>

@@ -24,10 +24,15 @@ function AdventureBlock(runtime, element) {
             };
         });
 
-        // create the application controller
         var controller = new AdventureController({
             app: app,
             runtime: runtime
+        });
+
+        var logger = new AdventureLogger({
+            app: app,
+            runtime: runtime,
+            element: element
         });
 
         // display current step and navigation
