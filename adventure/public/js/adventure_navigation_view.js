@@ -37,13 +37,13 @@ var AdventureNavigationView = Backbone.Marionette.ItemView.extend({
 
     // handlers. TODO refactor for a better readability?
     onStepChange: function(step) {
-        if (step.get('has_choices')) {
+        if (step.get('has_choices') && !step.get('student_choice')) {
             this.ui.nextButton.attr('disabled','disabled');
             this.ui.nextButton.show();
         }
         else {
             this.ui.nextButton.removeAttr('disabled');
-            if (step.get('has_next_step')) {
+            if (step.get('has_next_step') || step.get('student_choice')) {
                 this.ui.nextButton.show();
             }
             else {
@@ -68,9 +68,7 @@ var AdventureNavigationView = Backbone.Marionette.ItemView.extend({
     },
 
     onStepChoiceSelect: function(step) {
-        if (!step.get('is_last_step')) {
-            this.ui.nextButton.removeAttr('disabled');
-        }
+        this.ui.nextButton.removeAttr('disabled');
     }
 
 });

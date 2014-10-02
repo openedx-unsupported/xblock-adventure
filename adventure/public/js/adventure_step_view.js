@@ -38,6 +38,8 @@ var AdventureStepView = Backbone.Marionette.LayoutView.extend({
                 );
             }
         });
+
+        this.selectStudentChoice();
     },
 
     registerHandlers: function() {
@@ -54,6 +56,13 @@ var AdventureStepView = Backbone.Marionette.LayoutView.extend({
         };
 
         return data;
+    },
+
+    selectStudentChoice: function() {
+        if (this.model.get('student_choice')) {
+            $('input[value=' + this.model.get('student_choice')+']', this.el).prop( "checked", true );
+            this.app.vent.trigger('step:choice:select', this.model);
+        }
     },
 
     onChoiceSelect: function() {
