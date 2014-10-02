@@ -539,4 +539,4 @@ class AdventureBlock(XBlockWithLightChildren):
     @staticmethod
     def workbench_scenarios():
         """A canned scenario for display in the workbench."""
-        return [("Adventure scenario", unicode(render_template('templates/xml/adventure_default.xml')))]
+        return [("Adventure scenario", '<adventure></adventure>')]
