@@ -37,6 +37,11 @@
     border-width: 1px 0;
 }
 
+.adventure .ooyala-child .ooyala-player-xblock-wrapper .transcript-header, .ooyala-player-xblock-wrapper .transcript-content,
+.adventure .ooyala-child .ooyala-player-xblock-wrapper .transcript-footer {
+    border-bottom: none;
+}
+
 .adventure .question {
     margin-bottom: 1em;
 }
