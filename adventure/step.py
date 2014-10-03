@@ -73,11 +73,25 @@ class StepBlock(LightChild):
 
         return True if choices else False
 
+    @property
+    def ooyala_players(self):
+        """
+        Returns the ooyala players child.
+        """
+
+        ooyala_players = [child for child in self.get_children_objects() if isinstance(child, OoyalaPlayerLightChildBlock)]
+
+        return ooyala_players
+
     def get_step_fragment_children(self, context={}):
         children = []
 
+        ooyala_children = {}
+        for child in self.get_children_objects():
+            ooyala_children[child.name] = True if isinstance(child, OoyalaPlayerLightChildBlock) else False
+
         fragment, named_children = self.get_children_fragment(context)
         for name, child in named_children:
-            children.append((name, child, isinstance(child, OoyalaPlayerLightChildBlock)))
+            children.append((name, child, ooyala_children[name]))
 
         return (fragment, children)

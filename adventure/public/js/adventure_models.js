@@ -7,6 +7,7 @@ var AdventureStepModel = Backbone.Model.extend({
         html: '',
         has_choices: false,
         xblocks: [],
+        student_choice: null,
         is_studio: false // TODO should be in the app config, not here. To move.
     }
 });

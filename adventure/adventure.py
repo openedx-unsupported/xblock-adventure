@@ -111,6 +111,7 @@ DEFAULT_XML_CONTENT = textwrap.dedent("""\
 
 # Classes ###########################################################
 
+@XBlock.wants("settings")
 class AdventureBlock(XBlockWithLightChildren):
     """
     An XBlock providing adventure capabilities
@@ -123,6 +124,8 @@ class AdventureBlock(XBlockWithLightChildren):
     xml_content = String(help="XML content", scope=Scope.content, default=DEFAULT_XML_CONTENT)
     current_step_name = String(help="Keep track of the student assessment progress.",
                                default='', scope=Scope.user_state)
+    student_choices = List(help="Store answers of student choices.", default=[],
+                           scope=Scope.user_state)
 
     display_name = String(help="Display name of the component", default="Adventure",
                           scope=Scope.settings)
@@ -195,6 +198,33 @@ class AdventureBlock(XBlockWithLightChildren):
             if step.name == name:
                 return step
         return None
+
+    def _get_student_choice(self, step):
+        """
+        Return the student choice for a step.
+        """
+        choice = None
+        try:
+            index = next(index for (index, d) in enumerate(self.student_choices) if d['step'] == step.name)
+            choice = self.student_choices[index]['choice']
+        except StopIteration:
+            pass
+
+        return choice
+
+    def _save_student_choice(self, submission):
+        """
+        Save the choice submitted by the student.
+        """
+        step = self._get_current_step()
+        for choice in self.student_choices:
+            if choice['step'] == step.name:
+                self.student_choices.remove(choice)
+
+        self.student_choices.append({
+            'step': step.name,
+            'choice': submission['choice']
+        })
 
     def _validate_steps(self, steps):
         """
@@ -272,16 +302,15 @@ class AdventureBlock(XBlockWithLightChildren):
                     'can_start_over': False if self.current_step_name == 'first' else True,
                     'html': step_fragment.content,
                     'has_choices': current_step.has_choices,
+                    'student_choice': self._get_student_choice(current_step),
                     'xblocks': [],
                     # this should only be once in the app config...
                     'is_studio': getattr(getattr(self, 'xmodule_runtime', None), 'is_author_mode', False)
                 }
             }
 
-            _, children = current_step.get_step_fragment_children()
-            for name, child, is_ooyala_player in children:
-                if not is_ooyala_player:
-                    continue
+            ooyala_players = current_step.ooyala_players
+            for child in ooyala_players:
                 xblock = child.xblock_view()
                 xblock['data'] = {
                     'step': current_step.name,
@@ -293,6 +322,14 @@ class AdventureBlock(XBlockWithLightChildren):
                 })
 
         return response
+
+    # TODO find a better way, to avoid duplication of this (needed for ooyala child)
+    def api_key_3play_from_default_setting(self):
+        settings_service = self.runtime.service(self, 'settings')
+        try:
+            return settings_service.get('ENV_TOKENS')['XBLOCK_OOYALA_3PLAY_API']
+        except (AttributeError, KeyError):
+            return ''
 
     @property
     def title(self):
@@ -340,6 +377,9 @@ class AdventureBlock(XBlockWithLightChildren):
             step = self._get_step_by_name(context_step_name)
             for child in step.get_children_objects():
                 if child.name == context_step_child_name:
+                    # 3play api key from setting
+                    if not child.api_key_3play:
+                        child.api_key_3play = self.api_key_3play_from_default_setting()
                     return child.student_view(context)
 
         # First access, set the current_step to the beginning of the adventure
@@ -409,6 +449,8 @@ class AdventureBlock(XBlockWithLightChildren):
                 'message': 'Invalid submission. current_step_name: {}'.format(self.current_step_name)
             }
 
+        if 'choice' in submissions:
+            self._save_student_choice(submissions)
         self.current_step_name = next_step.name
         self.runtime.publish(self, 'progress', {})
 
@@ -437,6 +479,9 @@ class AdventureBlock(XBlockWithLightChildren):
     @XBlock.json_handler
     def start_over(self, submissions, suffix=''):
         log.debug(u'Start Over {}'.format(self.adventure_id))
+
+        while self.student_choices:
+            self.student_choices.pop()
 
         self.current_step_name = "first"
 
