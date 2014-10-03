@@ -91,3 +91,9 @@ See [general instructions][workbench-instructions]
 on installing, using and testing XBlocks with the workbench.
 
 [workbench-instructions]: https://github.com/open-craft/xblock-sdk/blob/dragonfi-instructions-to-test-xblocks/README.md#testing-an-xblock
+
+# TODO
+
+When test are finish and working:
+
+- Add tests for get_student_choice and save_student_choice (previous state saving)
