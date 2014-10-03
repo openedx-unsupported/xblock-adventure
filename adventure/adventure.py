@@ -203,24 +203,17 @@ class AdventureBlock(XBlockWithLightChildren):
         """
         Return the student choice for a step.
         """
-        choice = None
-        try:
-            index = next(index for (index, d) in enumerate(self.student_choices) if d['step'] == step.name)
-            choice = self.student_choices[index]['choice']
-        except StopIteration:
-            pass
+        for choice in reversed(self.student_choices):
+            if choice['step'] == step.name:
+                return choice['choice']
 
-        return choice
+        return None
 
     def _save_student_choice(self, submission):
         """
         Save the choice submitted by the student.
         """
         step = self._get_current_step()
-        for choice in self.student_choices:
-            if choice['step'] == step.name:
-                self.student_choices.remove(choice)
-
         self.student_choices.append({
             'step': step.name,
             'choice': submission['choice']
