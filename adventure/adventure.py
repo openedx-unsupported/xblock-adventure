@@ -406,19 +406,12 @@ class AdventureBlock(XBlockWithLightChildren):
 
         return fragment
 
-    @XBlock.json_handler
-    def publish_event(self, data, suffix=''):
-
-        try:
-            event_type = data.pop('event_type')
-        except KeyError as e:
-            return {'result': 'error', 'message': 'Missing event_type in JSON data'}
-
-        data['user_id'] = self.scope_ids.user_id
-        data['component_id'] = self.adventure_id
-
-        self.runtime.publish(self, event_type, data)
-        return {'result': 'success'}
+    @property
+    def additional_publish_event_data(self):
+        return  {
+            'user_id': self.scope_ids.user_id,
+            'component_id': self.adventure_id,
+        }
 
     @XBlock.json_handler
     def submit(self, submissions, suffix=''):
