@@ -58,7 +58,6 @@ var AdventureLogger = Backbone.Marionette.Controller.extend({
     },
 
     _publish_event: function(data) {
-        console.log("publising event", data);
         $.ajax({
             type: "POST",
             url: this.runtime.handlerUrl(this.element, 'publish_event'),
