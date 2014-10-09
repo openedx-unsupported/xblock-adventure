@@ -41,7 +41,7 @@ from lazy import lazy
 
 from .info import InfoBlock
 from .step import StepBlock
-from .utils import load_resource, render_template, render_js_template
+from .utils import loader
 
 
 # Globals ###########################################################
@@ -148,8 +148,8 @@ class AdventureBlock(XBlockWithLightChildren):
     ]
 
     JS_TEMPLATES = [
-        ('adventure-step-view', 'templates/html/adventure_step_view.html'),
-        ('adventure-navigation-view', 'templates/html/adventure_navigation_view.html'),
+        ('adventure-step-view-template', 'templates/html/adventure_step_view.html'),
+        ('adventure-navigation-view-template', 'templates/html/adventure_navigation_view.html'),
     ]
 
     def _get_current_step(self):
@@ -383,7 +383,7 @@ class AdventureBlock(XBlockWithLightChildren):
         if self.info:
             info_fragment = self.info.render(context={'as_template': False})
 
-        fragment.add_content(render_template(
+        fragment.add_content(loader.render_template(
             'templates/html/adventure.html', {
                 'self': self,
                 'info_fragment': info_fragment,
@@ -398,7 +398,7 @@ class AdventureBlock(XBlockWithLightChildren):
         context = {}
         for template in self.JS_TEMPLATES:
             fragment.add_resource(
-                render_js_template(template[1], context=context, id=template[0]),
+                loader.render_js_template(template[1], element_id=template[0], context=context),
                 "text/html"
             )
 
@@ -408,7 +408,7 @@ class AdventureBlock(XBlockWithLightChildren):
 
     @property
     def additional_publish_event_data(self):
-        return  {
+        return {
             'user_id': self.scope_ids.user_id,
             'component_id': self.adventure_id,
         }
@@ -478,7 +478,7 @@ class AdventureBlock(XBlockWithLightChildren):
         Editing view in Studio
         """
         fragment = Fragment()
-        fragment.add_content(render_template('templates/html/adventure_edit.html', {
+        fragment.add_content(loader.render_template('templates/html/adventure_edit.html', {
             'self': self,
             'xml_content': self.xml_content
         }))

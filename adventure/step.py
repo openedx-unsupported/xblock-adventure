@@ -31,7 +31,7 @@ from mentoring.step import StepParentMixin
 
 from ooyala_player import OoyalaPlayerLightChildBlock
 
-from .utils import render_template
+from .utils import loader
 
 # Globals ###########################################################
 
@@ -61,7 +61,7 @@ class StepBlock(LightChild, StepParentMixin):
         context['as_template'] = False
 
         fragment, children = self.get_step_fragment_children(context)
-        fragment.add_content(render_template('templates/html/step.html', {
+        fragment.add_content(loader.render_template('templates/html/step.html', {
             'self': self,
             'children': children
         }))
