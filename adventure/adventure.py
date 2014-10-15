@@ -532,4 +532,4 @@ class AdventureBlock(XBlockWithLightChildren):
     @staticmethod
     def workbench_scenarios():
         """A canned scenario for display in the workbench."""
-        return [("Adventure scenario", '<adventure></adventure>')]
+        return [("Adventure scenario", DEFAULT_XML_CONTENT)]
