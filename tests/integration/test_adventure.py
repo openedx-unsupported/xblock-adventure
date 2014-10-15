@@ -60,19 +60,34 @@ class TestSeleniumTest(AdventureBaseTest):
 
         return controls
 
-    def assert_at_step_2(self, adventure):
+    def _assert_at_step_2(self, adventure):
         self.wait_until_text_in("You enter the dragon's cave. The age-old beast stands before you!", adventure)
         controls = self.get_nav_controls(adventure)
 
         self.assert_persistent_elements_present(adventure)
 
         self.assert_clickable(controls['back'])
-        self.assert_disabled(controls['next'])
 
         choices = self._GetChoices(adventure)
         self.assertIn("What do you do?", choices.text)
-        self.assertEquals(choices.state, {"Kill dragon": False, "Leave": False})
         controls['choices'] = choices
+
+        return controls, choices
+
+
+    def assert_at_step_2(self, adventure):
+        controls, choices = self._assert_at_step_2(adventure)
+
+        self.assert_disabled(controls['next'])
+        self.assertEquals(choices.state, {"Kill dragon": False, "Leave": False})
+
+        return controls
+
+    def assert_at_step_2_with_saved_values(self, adventure):
+        controls, choices = self._assert_at_step_2(adventure)
+
+        self.assert_clickable(controls['next'])
+        self.assertEquals(choices.state, {"Kill dragon": True, "Leave": False})
 
         return controls
 
@@ -157,7 +172,7 @@ class TestSeleniumTest(AdventureBaseTest):
         # oh no, this sounds stupid, let's go back one step
         controls['back'].click()
 
-        controls = self.assert_at_step_2(adventure)
+        controls = self.assert_at_step_2_with_saved_values(adventure)
         controls['choices'].select("Leave")
         self.wait_until_clickable(controls['next'])
         controls['next'].click()
