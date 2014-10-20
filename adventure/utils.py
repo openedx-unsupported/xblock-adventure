@@ -21,8 +21,6 @@
 # "AGPLv3".  If not, see <http://www.gnu.org/licenses/>.
 #
 
-# Imports ###########################################################
-
 import logging
 import os
 import pkg_resources
@@ -31,42 +29,14 @@ from cStringIO import StringIO
 from django.template import Context, Template
 from xblock.fragment import Fragment
 
+from xblockutils.resources import ResourceLoader
 
-# Globals ###########################################################
 
 log = logging.getLogger(__name__)
 
 
-# Functions #########################################################
+loader = ResourceLoader(__name__)
 
-def load_resource(resource_path):
-    """
-    Gets the content of a resource
-    """
-    resource_content = pkg_resources.resource_string(__name__, resource_path)
-    return unicode(resource_content)
-
-
-def render_template(template_path, context={}):
-    """
-    Evaluate a template by resource path, applying the provided context
-    """
-    template_str = load_resource(template_path)
-    template = Template(template_str)
-    return template.render(Context(context))
-
-
-def render_js_template(template_path, context={}, id='light-child'):
-    """
-    Render a js template.
-    """
-    return u"<script type='text/template' id='{}-template'>\n{}\n</script>".format(
-        id,
-        render_template(template_path, context)
-    )
-
-
-# Classes ###########################################################
 
 class XBlockWithChildrenFragmentsMixin(object):
     def get_children_fragment(self, context, view_name='student_view', instance_of=None,

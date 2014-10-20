@@ -1,4 +1,6 @@
 -e .
--e git://github.com/open-craft/xblock-mentoring.git@1a6e2092a361f0befff18d07607517d437046e3b#egg=xblock-mentoring
+#-e git://github.com/edx-solutions/xblock-mentoring.git@b59e5e4fb0d75c8a18da0b1a687c674d2e527f50#egg=xblock-mentoring
+#-e git://github.com/open-craft/xblock-utils.git@7306fc30f012fd711d7a6e8747b526594dd8ed3f#egg=xblock-utils
+
 lxml
 lazy==1.2

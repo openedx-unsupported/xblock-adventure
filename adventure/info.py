@@ -26,7 +26,7 @@
 import logging
 
 from mentoring.light_children import LightChild, Scope, String
-from .utils import render_template
+from .utils import loader
 
 # Globals ###########################################################
 
@@ -50,7 +50,7 @@ class InfoBlock(LightChild):
         context['as_template'] = False
 
         fragment, named_children = self.get_children_fragment(context)
-        fragment.add_content(render_template('templates/html/info.html', {
+        fragment.add_content(loader.render_template('templates/html/info.html', {
             'self': self,
             'named_children': named_children,
         }))
