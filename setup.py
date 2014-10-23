@@ -56,7 +56,9 @@ setup(
     packages=['adventure'],
     install_requires=[
         'XBlock',
+        'xblock-mentoring',
     ],
+    dependency_links = ['http://github.com/edx-solutions/xblock-mentoring/tarball/master#egg=xblock-mentoring'],
     entry_points={
         'xblock.v1': BLOCKS,
         'xblock.light_children': BLOCKS_CHILDREN,
