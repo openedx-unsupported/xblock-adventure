@@ -47,9 +47,10 @@
 }
 
 .adventure .choice-label {
-    margin-left: 2em;
+    margin-left: 1em;
+    display: inline;
 }
 
 .adventure .choice-selector {
-    margin-right: 1em;
+    display: inline-block;
 }
