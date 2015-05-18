@@ -51,12 +51,16 @@
     width: 90%; /* Fallback for browsers without calc() support */
     width: calc(100% - 3em);
     display: inline-block;
-    vertical-align: text-top;
+    vertical-align: top;
     line-height: 1.5;
 }
 
 .adventure .choice-selector {
     display: inline;
+}
+
+.adventure .choice-selector input[type="radio"] {
+    margin-top: 0.5ex;
 }
 
 .adventure .choice {
