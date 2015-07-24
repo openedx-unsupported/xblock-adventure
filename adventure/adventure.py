@@ -267,6 +267,13 @@ class AdventureBlock(XBlockWithLightChildren):
                     if value is None or value not in step_names:
                         raise ValueError('All mcq choice values must be a valid step name.')
 
+    def is_default_xml_content(self, value):
+        """
+        Always return False here. This will snapshot the default XML if xml_content is not set, but will
+        avoid a problem where the contents are discarded later on by setting it explicitly.
+        """
+        return False
+
     def _render_current_step(self):
         """
         Render the json response of the current step.
