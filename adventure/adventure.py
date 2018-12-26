@@ -33,6 +33,7 @@ from StringIO import StringIO
 from mentoring.light_children import XBlockWithLightChildren
 from mentoring import TitleBlock
 
+from xblock.completable import CompletableXBlockMixin
 from xblock.core import XBlock
 from xblock.fields import Scope, String, Integer, List
 from xblock.fragment import Fragment
@@ -112,7 +113,7 @@ DEFAULT_XML_CONTENT = textwrap.dedent("""\
 # Classes ###########################################################
 
 @XBlock.wants("settings")
-class AdventureBlock(XBlockWithLightChildren):
+class AdventureBlock(CompletableXBlockMixin, XBlockWithLightChildren):
     """
     An XBlock providing adventure capabilities
 
@@ -438,7 +439,7 @@ class AdventureBlock(XBlockWithLightChildren):
         if 'choice' in submissions:
             self._save_student_choice(submissions)
         self.current_step_name = next_step.name
-        self.runtime.publish(self, 'progress', {})
+        self.emit_completion(1.0)
 
         return self._render_current_step()
 
