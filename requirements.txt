@@ -1,5 +1,8 @@
 -e .
 -e git://github.com/edx-solutions/xblock-mentoring.git#egg=xblock-mentoring
-
-lxml
+edx-i18n-tools==0.4.7
 lazy==1.2
+lxml==3.0.1
+mako==1.0.7
+parsel==1.2.0
+transifex-client==0.13.4
