@@ -35,7 +35,7 @@ from mentoring import TitleBlock
 
 from xblock.completable import CompletableXBlockMixin
 from xblock.core import XBlock
-from xblock.fields import Scope, String, Integer, List
+from xblock.fields import Scope, String, Integer, List, UNIQUE_ID
 from xblock.fragment import Fragment
 
 from lazy import lazy
@@ -120,7 +120,7 @@ class AdventureBlock(CompletableXBlockMixin, XBlockWithLightChildren):
     Composed of text, video, questions and steps, this xblock acts like a 'Choose your own
     adventure'.
     """
-    adventure_id = String(scope=Scope.settings, default=lambda: uuid4().hex)
+    adventure_id = String(scope=Scope.settings, default=UNIQUE_ID)
 
     xml_content = String(help="XML content", scope=Scope.content, default=DEFAULT_XML_CONTENT)
     current_step_name = String(help="Keep track of the student assessment progress.",
