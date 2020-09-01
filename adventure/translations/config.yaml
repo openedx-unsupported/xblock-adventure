@@ -2,6 +2,15 @@
 
 locales:
     - en  # English - Source Language
+    - ar  # Arabic
+    - es_419  # Spanish (Latin America)
+    - ja_JP  # Japanese
+    - ko_KR  # Korean
+    - fr  # French
+    - pt_BR  # Portuguese (Brazil)
+    - zh_CN  # Chinese (China)
+    - de_DE  # German
+    - pl # Polish
 
 # The locales used for fake-accented English, for testing.
 dummy_locales:

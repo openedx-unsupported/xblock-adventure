@@ -85,6 +85,29 @@ a new adventure unit defaults to in the Studio.
 
 [default-adventure]: adventure/templates/xml/adventure_default.xml
 
+# Translation (i18n)
+
+This repo offers multiple make targets to automate the translation tasks.
+Each make target will be explained below:
+
+- `extract_translations`. Use [`i18n_tool` extract](https://github.com/edx/i18n-tools) to create `.po` files based on all the tagged strings in the python and javascript code.
+- `compile_translations`. Use [`i18n_tool` generate](https://github.com/edx/i18n-tools) to create `.mo` compiled files.
+- `detect_changed_source_translations`. Use [`i18n_tool` changed](https://github.com/edx/i18n-tools) to identify any updated translations.
+- `validate_translations`. Compile translations and check the source translations haven't changed.
+
+If you want to add a new language:
+  1. Add language to `adventure/translations/config.yaml`
+  2. Make sure all tagged strings have been extracted:
+  ```bash
+  make extract_translations
+  ```
+  3. Clone `en` directory to `adventure/translations/<lang_code>/` for example: `adventure/translations/fa_IR/`
+  4. Make necessary changes to translation files headers. Make sure you have proper `Language` and `Plural-Forms` lines.
+  5. When you finished your modification process, re-compile the translation messages.
+  ```bash
+  make compile_translations
+  ```
+
 ## Workbench installation, settings and testing
 
 See [general instructions][workbench-instructions]
