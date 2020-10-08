@@ -1,0 +1,23 @@
+[REPORTS]
+reports=no
+
+[FORMAT]
+max-line-length=120
+
+[MESSAGES CONTROL]
+disable=
+    fixme,
+    simplifiable-if-expression,
+    too-many-ancestors,
+    too-many-statements,
+    missing-function-docstring,
+    missing-module-docstring,
+    missing-class-docstring,
+    logging-format-interpolation,
+    no-self-use,
+    unused-argument,
+    unused-import,
+    invalid-name
+
+[SIMILARITIES]
+min-similarity-lines=6
