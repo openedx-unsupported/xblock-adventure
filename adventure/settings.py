@@ -8,7 +8,9 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+
 import yaml
+from workbench.settings import *  # pylint: disable=wildcard-import, unused-wildcard-import
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
@@ -33,11 +35,23 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = (
-    'statici18n',
-    'adventure',
     'django.contrib.auth',
     'django.contrib.contenttypes',
+    'django.contrib.admin',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'statici18n',
+    'workbench',
+    'adventure',
 )
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': 'adventure.sqlite'
+    }
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.6/topics/i18n/
