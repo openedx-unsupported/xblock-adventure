@@ -318,14 +318,6 @@ class AdventureBlock(CompletableXBlockMixin, XBlockWithLightChildren):
 
         return response
 
-    # TODO find a better way, to avoid duplication of this (needed for ooyala child)
-    def api_key_3play_from_default_setting(self):
-        settings_service = self.runtime.service(self, 'settings')
-        try:
-            return settings_service.get('ENV_TOKENS')['XBLOCK_OOYALA_3PLAY_API']
-        except (AttributeError, KeyError):
-            return ''
-
     @property
     def i18n_service(self):
         """ Obtains translation service """
@@ -377,9 +369,6 @@ class AdventureBlock(CompletableXBlockMixin, XBlockWithLightChildren):
             step = self._get_step_by_name(context_step_name)
             for child in step.get_children_objects():
                 if child.name == context_step_child_name:
-                    # 3play api key from setting
-                    if not child.api_key_3play:
-                        child.api_key_3play = self.api_key_3play_from_default_setting()
                     return child.student_view(context)
 
         # First access, set the current_step to the beginning of the adventure

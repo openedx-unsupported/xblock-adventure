@@ -51,7 +51,7 @@ BLOCKS_CHILDREN = [
 
 setup(
     name='xblock-adventure',
-    version='0.4.1',
+    version='0.4.2',
     description='XBlock - Adventure',
     packages=['adventure'],
     install_requires=[
