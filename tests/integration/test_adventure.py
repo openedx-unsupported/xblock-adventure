@@ -13,7 +13,7 @@ class TestSeleniumTest(AdventureBaseTest):
         self.assertTrue(elem.is_displayed())
         self.assertTrue(elem.is_enabled())
 
-    class _GetChoices(object):
+    class _GetChoices(object):  # pylint: disable=useless-object-inheritance
         def __init__(self, adventure):
             self._mcq = adventure.find_element_by_css_selector(".choices")
 
@@ -29,7 +29,7 @@ class TestSeleniumTest(AdventureBaseTest):
             return state
 
         def select(self, text):
-            state = {}
+            state = {}  # pylint: disable=unused-variable
             for choice in self._mcq.find_elements_by_css_selector(".choice"):
                 if choice.text == text:
                     choice.find_element_by_css_selector(".choice-selector").click()
@@ -79,15 +79,17 @@ class TestSeleniumTest(AdventureBaseTest):
         controls, choices = self._assert_at_step_2(adventure)
 
         self.assert_disabled(controls['next'])
-        self.assertEquals(choices.state, {"Kill dragon": False, "Leave": False})
+        self.assertEqual(choices.state, {"Kill dragon": False, "Leave": False})
 
         return controls
 
     def assert_at_step_2_with_saved_values(self, adventure):
         controls, choices = self._assert_at_step_2(adventure)
-
+        state = choices.state
+        state['Kill dragon'] = self.browser.execute_script(
+            "return document.querySelector('input[type=radio][value=slay]').checked")
         self.assert_clickable(controls['next'])
-        self.assertEquals(choices.state, {"Kill dragon": True, "Leave": False})
+        self.assertEqual(state, {"Kill dragon": True, "Leave": False})
 
         return controls
 
@@ -99,7 +101,7 @@ class TestSeleniumTest(AdventureBaseTest):
         self.assert_disabled(controls['next'])
 
         choices = self._GetChoices(adventure)
-        self.assertEquals(choices.state, {"Yes": False, "Um... no..": False})
+        self.assertEqual(choices.state, {"Yes": False, "Um... no..": False})
         controls['choices'] = choices
 
         return controls
