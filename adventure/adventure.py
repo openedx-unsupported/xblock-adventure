@@ -391,7 +391,12 @@ class AdventureBlock(CompletableXBlockMixin, XBlockWithLightChildren):
         context = {}
         for template in self.JS_TEMPLATES:
             fragment.add_resource(
-                loader.render_js_template(template[1], element_id=template[0], context=context, i18n_service=self.i18n_service),
+                loader.render_js_template(
+                    template[1],
+                    element_id=template[0],
+                    context=context,
+                    i18n_service=self.i18n_service
+                ),
                 "text/html"
             )
 
