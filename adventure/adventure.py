@@ -109,7 +109,7 @@ DEFAULT_XML_CONTENT = textwrap.dedent("""\
 
 # Classes ###########################################################
 
-
+@XBlock.needs('i18n')
 @XBlock.wants("settings")
 class AdventureBlock(CompletableXBlockMixin, XBlockWithLightChildren):
     """
@@ -315,13 +315,10 @@ class AdventureBlock(CompletableXBlockMixin, XBlockWithLightChildren):
 
         return response
 
-    # TODO find a better way, to avoid duplication of this (needed for ooyala child)
-    def api_key_3play_from_default_setting(self):
-        settings_service = self.runtime.service(self, 'settings')
-        try:
-            return settings_service.get('ENV_TOKENS')['XBLOCK_OOYALA_3PLAY_API']
-        except (AttributeError, KeyError):
-            return ''
+    @property
+    def i18n_service(self):
+        """ Obtains translation service """
+        return self.runtime.service(self, "i18n")
 
     @property
     def title(self):
@@ -369,9 +366,6 @@ class AdventureBlock(CompletableXBlockMixin, XBlockWithLightChildren):
             step = self._get_step_by_name(context_step_name)
             for child in step.get_children_objects():
                 if child.name == context_step_child_name:
-                    # 3play api key from setting
-                    if not child.api_key_3play:
-                        child.api_key_3play = self.api_key_3play_from_default_setting()
                     return child.student_view(context)
 
         # First access, set the current_step to the beginning of the adventure
@@ -382,11 +376,11 @@ class AdventureBlock(CompletableXBlockMixin, XBlockWithLightChildren):
         if self.info:
             info_fragment = self.info.render(context={'as_template': False})
 
-        fragment.add_content(loader.render_template(
+        fragment.add_content(loader.render_django_template(
             'templates/html/adventure.html', {
                 'self': self,
                 'info_fragment': info_fragment,
-            }))
+            }, i18n_service=self.i18n_service))
 
         for css_url in self.CSS_URLS:
             fragment.add_css_url(self.runtime.local_resource_url(self, css_url))
@@ -397,7 +391,12 @@ class AdventureBlock(CompletableXBlockMixin, XBlockWithLightChildren):
         context = {}
         for template in self.JS_TEMPLATES:
             fragment.add_resource(
-                loader.render_js_template(template[1], element_id=template[0], context=context),
+                loader.render_js_template(
+                    template[1],
+                    element_id=template[0],
+                    context=context,
+                    i18n_service=self.i18n_service
+                ),
                 "text/html"
             )
 
@@ -474,10 +473,10 @@ class AdventureBlock(CompletableXBlockMixin, XBlockWithLightChildren):
         Editing view in Studio
         """
         fragment = Fragment()
-        fragment.add_content(loader.render_template('templates/html/adventure_edit.html', {
+        fragment.add_content(loader.render_django_template('templates/html/adventure_edit.html', {
             'self': self,
             'xml_content': self.xml_content
-        }))
+        }, i18n_service=self.i18n_service))
         fragment.add_javascript_url(
             self.runtime.local_resource_url(self, 'public/js/adventure.js'))
         fragment.add_css_url(
