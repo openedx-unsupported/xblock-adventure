@@ -22,6 +22,7 @@ var AdventureNavigationView = Backbone.Marionette.ItemView.extend({
 
     onShowNextStep: function(event) {
         event.preventDefault();
+        event.currentTarget.disabled = true;
         this.app.vent.trigger('show:next:step');
     },
 
