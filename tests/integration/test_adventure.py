@@ -74,7 +74,6 @@ class TestSeleniumTest(AdventureBaseTest):
 
         return controls, choices
 
-
     def assert_at_step_2(self, adventure):
         controls, choices = self._assert_at_step_2(adventure)
 
@@ -159,6 +158,7 @@ class TestSeleniumTest(AdventureBaseTest):
         controls['next'].click()
 
         self.assert_at_adventure_end(adventure)
+        self.assertEqual(1, 2)
 
     def test_really_long_session_with_step_backs_and_persistence(self):
         adventure = self.go_to_page("Branching Adventure")
