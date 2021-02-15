@@ -40,6 +40,7 @@ from mentoring.title import TitleBlock
 from adventure.info import InfoBlock
 from adventure.step import StepBlock
 from adventure.utils import loader
+from adventure.constants import JS_URLS, CSS_URLS, JS_TEMPLATES
 
 # Globals ###########################################################
 
@@ -128,28 +129,6 @@ class AdventureBlock(CompletableXBlockMixin, XBlockWithLightChildren):
 
     display_name = String(help="Display name of the component", default="Adventure",
                           scope=Scope.settings)
-
-    CSS_URLS = [
-        'public/css/adventure.css'
-    ]
-
-    JS_URLS = [
-        'public/js/vendor/underscore-min.js',
-        'public/js/vendor/backbone-min.js',
-        'public/js/vendor/backbone.marionette.min.js',
-        'public/js/vendor/jquery.xblock.js',
-        'public/js/adventure.js',
-        'public/js/adventure_controller.js',
-        'public/js/adventure_logger.js',
-        'public/js/adventure_step_view.js',
-        'public/js/adventure_navigation_view.js',
-        'public/js/adventure_models.js'
-    ]
-
-    JS_TEMPLATES = [
-        ('adventure-step-view-template', 'templates/html/adventure_step_view.html'),
-        ('adventure-navigation-view-template', 'templates/html/adventure_navigation_view.html'),
-    ]
 
     def _get_current_step(self):
         """
@@ -382,14 +361,14 @@ class AdventureBlock(CompletableXBlockMixin, XBlockWithLightChildren):
                 'info_fragment': info_fragment,
             }, i18n_service=self.i18n_service))
 
-        for css_url in self.CSS_URLS:
+        for css_url in CSS_URLS:
             fragment.add_css_url(self.runtime.local_resource_url(self, css_url))
 
-        for js_url in self.JS_URLS:
+        for js_url in JS_URLS:
             fragment.add_javascript_url(self.runtime.local_resource_url(self, js_url))
 
         context = {}
-        for template in self.JS_TEMPLATES:
+        for template in JS_TEMPLATES:
             fragment.add_resource(
                 loader.render_js_template(
                     template[1],

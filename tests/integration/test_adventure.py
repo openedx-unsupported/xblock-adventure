@@ -1,6 +1,12 @@
+from unittest.mock import patch
+from adventure.constants import JS_URLS
 from .base_test import AdventureBaseTest
 
 
+@patch(
+    'adventure.adventure.JS_URLS',
+    ['public/js/vendor/underscore-min.js', 'public/js/vendor/backbone-min.js'] + JS_URLS
+)
 class TestSeleniumTest(AdventureBaseTest):
     def assert_hidden(self, elem):
         self.assertFalse(elem.is_displayed())
