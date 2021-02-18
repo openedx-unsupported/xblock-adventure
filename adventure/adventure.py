@@ -24,6 +24,7 @@
 # Imports ###########################################################
 
 import logging
+import pkg_resources
 import textwrap
 from io import StringIO
 from uuid import uuid4
@@ -386,7 +387,7 @@ class AdventureBlock(CompletableXBlockMixin, XBlockWithLightChildren):
             fragment.add_css_url(self.runtime.local_resource_url(self, css_url))
 
         for js_url in self.JS_URLS:
-            fragment.add_javascript_url(self.runtime.local_resource_url(self, js_url))
+            fragment.add_javascript(self.resource_string(js_url))
 
         context = {}
         for template in self.JS_TEMPLATES:
@@ -528,3 +529,8 @@ class AdventureBlock(CompletableXBlockMixin, XBlockWithLightChildren):
     def workbench_scenarios():
         """A canned scenario for display in the workbench."""
         return [("Adventure scenario", DEFAULT_XML_CONTENT)]
+
+    def resource_string(self, path):  # pylint: disable=no-self-use
+        """Handy helper for getting resources from our kit."""
+        data = pkg_resources.resource_string(__name__, path)
+        return data.decode("utf8")
