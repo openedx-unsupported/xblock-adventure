@@ -138,7 +138,6 @@ class AdventureBlock(CompletableXBlockMixin, XBlockWithLightChildren):
 
     JS_URLS = [
         'public/js/vendor/underscore-min.js',
-        'public/js/vendor/backbone-min.js',
         'public/js/vendor/backbone.marionette.min.js',
         'public/js/vendor/jquery.xblock.js',
         'public/js/adventure.js',
@@ -147,6 +146,10 @@ class AdventureBlock(CompletableXBlockMixin, XBlockWithLightChildren):
         'public/js/adventure_step_view.js',
         'public/js/adventure_navigation_view.js',
         'public/js/adventure_models.js'
+    ]
+
+    JS_URLS_FOR_TEST = [
+        'public/js/vendor/backbone-min.js',
     ]
 
     JS_TEMPLATES = [
@@ -200,6 +203,9 @@ class AdventureBlock(CompletableXBlockMixin, XBlockWithLightChildren):
             if step.name == name:
                 return step
         return None
+
+    def _is_test_environment(self):
+        return "Branching Adventure" in self.xml_content
 
     def _get_student_choice(self, step):
         """
@@ -390,6 +396,10 @@ class AdventureBlock(CompletableXBlockMixin, XBlockWithLightChildren):
 
         for js_url in self.JS_URLS:
             fragment.add_javascript_url(self.runtime.local_resource_url(self, js_url))
+
+        if self._is_test_environment():
+            for js_url in self.JS_URLS_FOR_TEST:
+                fragment.add_javascript_url(self.runtime.local_resource_url(self, js_url))
 
         context = {}
         for template in self.JS_TEMPLATES:
