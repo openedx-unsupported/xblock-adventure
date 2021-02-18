@@ -134,8 +134,8 @@ class AdventureBlock(CompletableXBlockMixin, XBlockWithLightChildren):
     ]
 
     JS_URLS = [
-        'public/js/vendor/underscore-min.js',
-        'public/js/vendor/backbone-min.js',
+        'public/js/vendor/underscore.js',
+        'public/js/vendor/backbone.js',
         'public/js/vendor/backbone.marionette.min.js',
         'public/js/vendor/jquery.xblock.js',
         'public/js/adventure.js',
