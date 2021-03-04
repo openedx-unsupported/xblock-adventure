@@ -23,14 +23,12 @@
 
 import logging
 import os
+from io import BytesIO as StringIO
+
 import pkg_resources
-
-from cStringIO import StringIO
 from django.template import Context, Template
-from xblock.fragment import Fragment
-
+from web_fragments.fragment import Fragment
 from xblockutils.resources import ResourceLoader
-
 
 log = logging.getLogger(__name__)
 
@@ -38,7 +36,7 @@ log = logging.getLogger(__name__)
 loader = ResourceLoader(__name__)
 
 
-class XBlockWithChildrenFragmentsMixin(object):
+class XBlockWithChildrenFragmentsMixin(object):  # pylint: disable=useless-object-inheritance
     def get_children_fragment(self, context, view_name='student_view', instance_of=None,
                               not_instance_of=None):
         """
@@ -60,7 +58,7 @@ class XBlockWithChildrenFragmentsMixin(object):
             if not_instance_of is not None and isinstance(child, not_instance_of):
                 continue
             frag = self.runtime.render_child(child, view_name, context)
-            fragment.add_frag_resources(frag)
+            fragment.add_fragment_resources(frag)
             named_child_frags.append((child.name, frag))
         return fragment, named_child_frags
 
@@ -69,6 +67,6 @@ class XBlockWithChildrenFragmentsMixin(object):
         Returns a fragment with the content of all the children's content, concatenated
         """
         fragment, named_children = self.get_children_fragment(context)
-        for name, child_fragment in named_children:
+        for _, child_fragment in named_children:
             fragment.add_content(child_fragment.content)
         return fragment
