@@ -25,29 +25,27 @@
 
 import logging
 import textwrap
+from io import StringIO
 from uuid import uuid4
 
+from lazy import lazy
 from lxml import etree
-from StringIO import StringIO
-
-from mentoring.light_children import XBlockWithLightChildren
-from mentoring import TitleBlock
-
+from web_fragments.fragment import Fragment
 from xblock.completable import CompletableXBlockMixin
 from xblock.core import XBlock
-from xblock.fields import Scope, String, Integer, List, UNIQUE_ID
-from xblock.fragment import Fragment
+from xblock.fields import UNIQUE_ID, Integer, List, Scope, String
 
-from lazy import lazy
-
-from .info import InfoBlock
-from .step import StepBlock
-from .utils import loader
-
+from mentoring.light_children import XBlockWithLightChildren
+from mentoring.title import TitleBlock
+from adventure.info import InfoBlock
+from adventure.step import StepBlock
+from adventure.utils import loader
+from adventure.constants import JS_URLS, CSS_URLS, JS_TEMPLATES
 
 # Globals ###########################################################
 
 log = logging.getLogger(__name__)
+
 
 DEFAULT_XML_CONTENT = textwrap.dedent("""\
 <adventure display_name="Nav tooltip title">
@@ -131,28 +129,6 @@ class AdventureBlock(CompletableXBlockMixin, XBlockWithLightChildren):
 
     display_name = String(help="Display name of the component", default="Adventure",
                           scope=Scope.settings)
-
-    CSS_URLS = [
-        'public/css/adventure.css'
-    ]
-
-    JS_URLS = [
-        'public/js/vendor/underscore-min.js',
-        'public/js/vendor/backbone-min.js',
-        'public/js/vendor/backbone.marionette.min.js',
-        'public/js/vendor/jquery.xblock.js',
-        'public/js/adventure.js',
-        'public/js/adventure_controller.js',
-        'public/js/adventure_logger.js',
-        'public/js/adventure_step_view.js',
-        'public/js/adventure_navigation_view.js',
-        'public/js/adventure_models.js'
-    ]
-
-    JS_TEMPLATES = [
-        ('adventure-step-view-template', 'templates/html/adventure_step_view.html'),
-        ('adventure-navigation-view-template', 'templates/html/adventure_navigation_view.html'),
-    ]
 
     def _get_current_step(self):
         """
@@ -254,7 +230,7 @@ class AdventureBlock(CompletableXBlockMixin, XBlockWithLightChildren):
                 raise ValueError('All step "back" attributes must be a valid step name.')
 
             # Check if the next attribute is valid
-            next = step.attrib.get('next', None)
+            next = step.attrib.get('next', None)  # pylint: disable=redefined-builtin
             if next is not None and next not in step_names:
                 raise ValueError('All step "next" attributes must be a valid step name.')
 
@@ -385,16 +361,21 @@ class AdventureBlock(CompletableXBlockMixin, XBlockWithLightChildren):
                 'info_fragment': info_fragment,
             }, i18n_service=self.i18n_service))
 
-        for css_url in self.CSS_URLS:
+        for css_url in CSS_URLS:
             fragment.add_css_url(self.runtime.local_resource_url(self, css_url))
 
-        for js_url in self.JS_URLS:
+        for js_url in JS_URLS:
             fragment.add_javascript_url(self.runtime.local_resource_url(self, js_url))
 
         context = {}
-        for template in self.JS_TEMPLATES:
+        for template in JS_TEMPLATES:
             fragment.add_resource(
-                loader.render_js_template(template[1], element_id=template[0], context=context, i18n_service=self.i18n_service),
+                loader.render_js_template(
+                    template[1],
+                    element_id=template[0],
+                    context=context,
+                    i18n_service=self.i18n_service
+                ),
                 "text/html"
             )
 
@@ -412,8 +393,7 @@ class AdventureBlock(CompletableXBlockMixin, XBlockWithLightChildren):
     @XBlock.json_handler
     def submit(self, submissions, suffix=''):
         log.debug(u'Received submissions for {}, step "{}":{}'.format(
-            self.adventure_id, self.current_step_name, submissions)
-        )
+            self.adventure_id, self.current_step_name, submissions))
 
         current_step = self._get_current_step()
         next_step_name = submissions['choice'] if 'choice' in submissions else None
@@ -441,16 +421,14 @@ class AdventureBlock(CompletableXBlockMixin, XBlockWithLightChildren):
     @XBlock.json_handler
     def fetch_current_step(self, submissions, suffix=''):
         log.debug(u'Fetching current student step for {}, step "{}"'.format(
-            self.adventure_id, self.current_step_name)
-        )
+            self.adventure_id, self.current_step_name))
 
         return self._render_current_step()
 
     @XBlock.json_handler
     def fetch_previous_step(self, submissions, suffix=''):
         log.debug(u'Fetching previous student step for {}, step "{}"'.format(
-            self.adventure_id, self.current_step_name)
-        )
+            self.adventure_id, self.current_step_name))
 
         previous_step = self._get_previous_step()
         if previous_step:
@@ -497,7 +475,7 @@ class AdventureBlock(CompletableXBlockMixin, XBlockWithLightChildren):
         except etree.XMLSyntaxError as e:
             response = {
                 'result': 'error',
-                'message': e.message
+                'message': str(e)
             }
         else:
             root = content.getroot()
@@ -508,7 +486,7 @@ class AdventureBlock(CompletableXBlockMixin, XBlockWithLightChildren):
             except ValueError as e:
                 response = {
                     'result': 'error',
-                    'message': e.message
+                    'message': str(e)
                 }
             else:
                 response = {
@@ -520,7 +498,7 @@ class AdventureBlock(CompletableXBlockMixin, XBlockWithLightChildren):
                 if callable(adventure_id):
                     self.adventure_id = adventure_id()
 
-                self.xml_content = etree.tostring(content, pretty_print=True)
+                self.xml_content = etree.tostring(content, encoding='unicode', pretty_print=True)
 
         log.debug(u'Response from Studio: {}'.format(response))
         return response

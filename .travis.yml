@@ -1,0 +1,26 @@
+language: python
+services:
+  - xvfb
+  - mysql
+python:
+    - "3.5"
+before_install:
+    - "export DISPLAY=:99"
+    - wget https://github.com/mozilla/geckodriver/releases/download/v0.25.0/geckodriver-v0.25.0-linux64.tar.gz
+    - mkdir geckodriver
+    - tar -xzf geckodriver-v0.25.0-linux64.tar.gz -C geckodriver
+    - export PATH=$PATH:$PWD/geckodriver
+    - export BOKCHOY_HEADLESS=true
+    - mysql -e 'set global wait_timeout=3600'
+    -  mkdir -p var  # for var/workbench.log
+install:
+    - "pip install -r requirements.txt"
+    - "pip install -r test_requirements.txt"
+script:
+    - pycodestyle adventure --max-line-length=120 --exclude=adventure/adventure.py
+    - pylint tests adventure --unsafe-load-any-extension=y
+    - pytest tests
+notifications:
+  email: false
+addons:
+  firefox: "72.0.2"

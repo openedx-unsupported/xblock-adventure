@@ -26,7 +26,7 @@
 import logging
 
 from mentoring.light_children import LightChild, Scope, String
-from .utils import loader
+from adventure.utils import loader
 
 # Globals ###########################################################
 

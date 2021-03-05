@@ -25,13 +25,12 @@
 
 import logging
 
+from ooyala_player.ooyala_player import OoyalaPlayerLightChildBlock
+
 from mentoring.light_children import LightChild, Scope, String
-from mentoring import MCQBlock
+from mentoring.mcq import MCQBlock
 from mentoring.step import StepParentMixin
-
-from ooyala_player import OoyalaPlayerLightChildBlock
-
-from .utils import loader
+from adventure.utils import loader
 
 # Globals ###########################################################
 
@@ -83,11 +82,12 @@ class StepBlock(LightChild, StepParentMixin):
         Returns the ooyala players child.
         """
 
-        ooyala_players = [child for child in self.get_children_objects() if isinstance(child, OoyalaPlayerLightChildBlock)]
+        ooyala_players = [child for child in self.get_children_objects()
+                          if isinstance(child, OoyalaPlayerLightChildBlock)]
 
         return ooyala_players
 
-    def get_step_fragment_children(self, context={}):
+    def get_step_fragment_children(self, context=None):
         children = []
 
         ooyala_children = {}

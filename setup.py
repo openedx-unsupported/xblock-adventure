@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2014 edX
 #
@@ -24,8 +23,8 @@
 # Imports ###########################################################
 
 import os
-from setuptools import setup
 
+from setuptools import setup
 
 # Functions #########################################################
 
@@ -41,17 +40,17 @@ def package_data(pkg, root_list):
 
 
 BLOCKS = [
-    'adventure = adventure:AdventureBlock',
+    'adventure = adventure.adventure:AdventureBlock',
 ]
 
 BLOCKS_CHILDREN = [
-    'info = adventure:InfoBlock',
-    'step = adventure:StepBlock'
+    'info = adventure.info:InfoBlock',
+    'step = adventure.step:StepBlock'
 ]
 
 setup(
     name='xblock-adventure',
-    version='0.4.2',
+    version='1.0.0',
     description='XBlock - Adventure',
     packages=['adventure'],
     install_requires=[
