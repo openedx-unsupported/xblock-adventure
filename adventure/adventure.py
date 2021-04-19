@@ -50,10 +50,18 @@ log = logging.getLogger(__name__)
 DEFAULT_XML_CONTENT = textwrap.dedent("""\
 <adventure display_name="Nav tooltip title">
     <title>Title of Simulation</title>
-    <info>Description of overall goal of simulation such as walk Mary through understanding how her actions made a situation really hard on the team and impacted the client relationship:</info>
+    <info>Description of overall goal of simulation such as walk Mary through understanding how her actions made a 
+    situation really hard on the team and impacted the client relationship:</info>
 
     <step name="first">
-      Mary wants to hear your idea.
+      <html>
+        <strong>Watch the following video carefully</strong>
+        <p>Marry wants to know your opinion</p>
+            <div class="videoWrapper"><iframe src="//fast.wistia.net/embed/iframe/avk9twrrbn" 
+            allowtransparency="true" frameborder="0" scrolling="no" allowfullscreen="true" mozallowfullscreen="true" 
+            webkitallowfullscreen="true" oallowfullscreen="true" msallowfullscreen="true" class="wistia_embed" 
+            name="wistia_embed" width="100%" height="450"/></div>
+      </html>
       <mcq type="choices">
         <question>What idea will you suggest?</question>
         <choice value="last">Tell Mary about my great idea that matches her perception.</choice>
@@ -64,28 +72,31 @@ DEFAULT_XML_CONTENT = textwrap.dedent("""\
     <step name="second">
       <html>
         <strong>FEEDBACK</strong>
-        <p>Not quite. That wasn't such a good idea. Mary feels confused because you stated something as a fact that doesn't match her perception...</p>
+        <p>Not quite. That wasn't such a good idea. Mary feels confused because you stated something as a fact that 
+        doesn't match her perception...</p>
       </html>
-      <ooyala-player/>
       <html>
         <p>You need to see if you can get the conversation back on track.</p>
       </html>
       <mcq type="choices">
         <question>What will you say next?</question>
         <choice value="last">(a) Tell me what you think Bob's perception of the meeting was.</choice>
-        <choice value="third">(b) I can understand how you thought that, but let's discuss what really happened.</choice>
+        <choice value="third">(b) I can understand how you thought that, but let's discuss what really 
+        happened.</choice>
       </mcq>
     </step>
 
     <step name="third" back="second">
       <html>
         <strong>FEEDBACK</strong>
-        <p>Not quite. It's OK for Mary to show some emotion. Better to give her the space to do so and keep engaged in a conversation...</p>
+        <p>Not quite. It's OK for Mary to show some emotion. Better to give her the space to do so and keep engaged 
+        in a conversation...</p>
       </html>
-      <ooyala-player/>
       <html>
-        <p>Would be great to have a detailed feedback here following the video above... clarifying what happened and why.
-        Things to think about as they are prompted to go back and make a better and correct choice to keep the conversation on track.</p>
+        <p>Would be great to have a detailed feedback here following the video above... clarifying what happened 
+        and why.
+        Things to think about as they are prompted to go back and make a better and correct choice to keep the 
+        conversation on track.</p>
         <br/>
         <p>Think about this feedback and let's go back and start the conversation again.</p>
       </html>
@@ -96,10 +107,10 @@ DEFAULT_XML_CONTENT = textwrap.dedent("""\
         <strong>FEEDBACK</strong>
         <p>Great. Mary agrees with you.</p>
       </html>
-      <ooyala-player/>
       <html>
       <p>
-        Text to be written by curse creators that says the user has reached a successful outcome and directs them to continue
+        Text to be written by curse creators that says the user has reached a successful outcome and directs them to 
+        continue
         on with lesson content.
       </p>
       </html>
@@ -378,7 +389,7 @@ class AdventureBlock(CompletableXBlockMixin, XBlockWithLightChildren):
                 ),
                 "text/html"
             )
-
+        fragment.add_javascript_url("https://fast.wistia.com/assets/external/E-v1.js")
         fragment.initialize_js('AdventureBlock')
 
         return fragment

@@ -12,6 +12,7 @@ var AdventureStepView = Backbone.Marionette.LayoutView.extend({
     initialize: function(options) {
         this.app = options.app;
         _.bindAll(this, 'getData', 'onChoiceSelect');
+        this.app.vent.on('choices:load', this.onChoicesLoad);
         this.registerHandlers();
         this.initializeXBlockRegions();
     },
@@ -44,6 +45,17 @@ var AdventureStepView = Backbone.Marionette.LayoutView.extend({
 
     registerHandlers: function() {
         this.app.reqres.setHandler("stepData", this.getData);
+    },
+
+    onChoicesLoad: function() {
+        if (wistiaEmbeds.iframes.length > 0) {
+            wistiaEmbeds.bind("end", function() {
+                $(".navigation-view").addClass("show").removeClass("hide")
+                $('[data-type="MCQBlock"]').addClass("show").removeClass("hide")
+            });
+            $(".navigation-view").addClass("hide").removeClass("show")
+            $('[data-type="MCQBlock"]').addClass("hide").removeClass("show")
+        }
     },
 
     getData: function() {
