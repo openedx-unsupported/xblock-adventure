@@ -67,3 +67,11 @@
 .adventure .choice {
     margin-bottom: 1em;
 }
+
+.hide {
+    display: none;
+}
+
+.show {
+    display: block;
+}
