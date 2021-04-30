@@ -1,11 +1,11 @@
-<div class="step-content">
+<div class="step-content adventure-xblock-content">
   {% if self.content %}<p>{{ self.content }}</p>{% endif %}
 
   {% for name, c, is_ooyala_player in children %}
     {% if is_ooyala_player %}
       <div id="{{name}}" class="step-child ooyala-child"></div>
     {% else %}
-      <div id="{{name}}" class="step-child">
+      <div id="{{name}}" class="step-child {{name}}-info">
        {{c.body_html|safe}}
       </div>
     {% endif %}
