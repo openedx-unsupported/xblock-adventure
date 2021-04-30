@@ -1,33 +1,74 @@
 .adventure .navigation-view {
-    position: relative;
-    margin-top: 20px;
+    padding: 0 15px;
+}
+* {
+    box-sizing: border-box;
 }
 
 .adventure .navigation-view .navigation-back-next-buttons {
-    text-align: center;
+    margin: 0 auto;
+    padding: 20px 40px 10px;
+    max-width: 600px;
+    background: #F2F2F2;
+    border-radius: 0 0 4px 4px;
 }
 
 .adventure .navigation-view .navigation-next {
     text-align: center;
 }
-
-.adventure .navigation-view .navigation-start-over {
+.adventure .navigation-view .over-btn {
+    text-align: center;
+    padding: 0 0 10px;
     position: absolute;
-    right: 0;
-    bottom: 0;
+    top: 10px;
+    right: 10px;
 }
-
+.adventure .navigation-view .navigation-start-over {
+    display: inline-block;
+    border: 2px solid #DB232D;
+    min-width: 120px;
+    font-size: 16px;
+    line-height: 20px;
+    padding: 10px;
+    color: #DB232D;
+    border-radius: 5px;
+}
+.adventure .navigation-view .navigation-start-over:hover {
+    color: white;
+    background: #DB232D;
+}
+.navigation-next, .navigation-back {
+    height: 50px;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 25px;
+    text-transform: uppercase;
+    border-radius: 6px;
+    border: none;
+    color: black;
+    box-shadow: none !important;
+    background: #8BC5CB;
+    outline: none !important;
+    text-shadow: none;
+    margin: 0 0 10px;
+}
+.navigation-next:hover, .navigation-back:hover {
+    background: #8BC5CB !important;
+    color: black !important;
+    opacity: .8;
+}
 .adventure .step-body {
-    padding: 1em;
+    padding: 15px;
+    position: relative;
     border: 4px solid #eee;
 }
 
 .adventure .step-view {
-    padding: 1em;
+    padding: 0;
 }
 
 .adventure .step-child {
-    margin-bottom: 1em;
+    margin-bottom: 0;
 }
 
 .adventure .ooyala-child {
@@ -46,26 +87,52 @@
     margin-bottom: 1em;
     max-width: 100%;
 }
-
-.adventure .choice-label {
-    margin-left: 1em;
-    width: 90%; /* Fallback for browsers without calc() support */
-    width: calc(100% - 3em);
-    display: inline-block;
-    vertical-align: top;
-    line-height: 1.5;
+.choice .choice-result {
+    display: none;
 }
-
 .adventure .choice-selector {
     display: inline;
 }
 
 .adventure .choice-selector input[type="radio"] {
-    margin-top: 0.5ex;
+    position: fixed;
+    top: -9999px;
+    left: -9999px;
 }
-
+.adventure .choice-selector {
+    position: absolute;
+    left: 15px;
+    top: 20px;
+    width: 30px;
+    height: 30px;
+    border: 2px solid #C4C4C4;
+}
+.adventure .choice-selector:after {
+    position: absolute;
+    left: 3px;
+    top: 3px;
+    bottom: 3px;
+    right: 3px;
+    content: "";
+    background: #8BC5CB;
+    display: none;
+}
 .adventure .choice {
-    margin-bottom: 1em;
+    margin: 0 -15px 2px;
+    position: relative;
+}
+.adventure .choice.checked .choice-selector:after {
+    display: block;
+}
+.adventure .choice-label {
+    display: block;
+    padding: 20px 15px 20px 60px;
+    min-height: 70px;
+    font-size: 18px;
+    line-height: 30px;
+}
+.adventure .choice-label:hover {
+    background: #E2E2E2;
 }
 
 .hide {
@@ -74,4 +141,37 @@
 
 .show {
     display: block;
+}
+.adventure-xblock-content {
+    position: relative;
+}
+.None_2_1-info {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: 0;
+    padding: 20px 15px 0;
+    margin: 0 !important;
+}
+.None_2_1-info .xblock-light-child {
+    margin: 0 auto;
+    max-width: 600px;
+    background: #F2F2F2;
+    border-radius: 4px 4px 0 0;
+    max-height: 410px;
+    padding: 40px 40px 0;
+    overflow-y: auto;
+}
+.xblock-light-child .questionnaire h3 {
+    display: none;
+}
+.xblock-light-child .questionnaire .question p {
+    font-size: 20px;
+    line-height: 30px;
+    font-weight: 700;
+    margin: 0 0 10px !important;
+}
+.adventure .step-child .html_child >strong, .adventure .step-child .html_child >p {
+    padding-right: 130px;
 }
