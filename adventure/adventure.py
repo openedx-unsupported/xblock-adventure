@@ -54,7 +54,7 @@ DEFAULT_XML_CONTENT = textwrap.dedent("""\
     situation really hard on the team and impacted the client relationship:</info>
 
     <step name="first">
-      <html>
+      <html name="video">
         <strong>Watch the following video carefully</strong>
         <p>Marry wants to know your opinion</p>
             <div class="videoWrapper"><iframe src="//fast.wistia.net/embed/iframe/avk9twrrbn" 
@@ -64,9 +64,17 @@ DEFAULT_XML_CONTENT = textwrap.dedent("""\
       </html>
       <mcq type="choices">
         <question>What idea will you suggest?</question>
-        <choice value="last">Tell Mary about my great idea that matches her perception.</choice>
+        <choice value="last-correct">Tell Mary about my great idea that matches her perception.</choice>
         <choice value="second">Tell Mary about my other idea that doesn't match her perception.</choice>
       </mcq>
+      <html name="last">
+        <strong>FEEDBACK FIRST</strong>
+        <p>First Feedback Text</p>
+      </html>
+      <html name="second">
+        <strong>FEEDBACK SECOND</strong>
+        <p>Second feedback text</p>
+      </html>
     </step>
 
     <step name="second">
@@ -80,7 +88,7 @@ DEFAULT_XML_CONTENT = textwrap.dedent("""\
       </html>
       <mcq type="choices">
         <question>What will you say next?</question>
-        <choice value="last">(a) Tell me what you think Bob's perception of the meeting was.</choice>
+        <choice value="last-correct">(a) Tell me what you think Bob's perception of the meeting was.</choice>
         <choice value="third">(b) I can understand how you thought that, but let's discuss what really 
         happened.</choice>
       </mcq>
@@ -253,6 +261,7 @@ class AdventureBlock(CompletableXBlockMixin, XBlockWithLightChildren):
                     raise ValueError('All mcq must contain choices.')
                 for choice in choices:
                     value = choice.attrib.get('value', None)
+                    value = value and value.replace('-correct', '')  # to handle correct/incorrect MCQs/feedback
                     if value is None or value not in step_names:
                         raise ValueError('All mcq choice values must be a valid step name.')
 

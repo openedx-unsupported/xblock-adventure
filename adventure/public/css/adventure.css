@@ -1,10 +1,17 @@
 .adventure .navigation-view {
     padding: 0 15px;
 }
+.adventure {
+    padding-bottom: 60px;
+}
 * {
     box-sizing: border-box;
 }
-
+.step-content .wrapper-video .xblock-light-child {
+    max-width: 100%;
+    background: none;
+    padding: 0;
+}
 .adventure .navigation-view .navigation-back-next-buttons {
     margin: 0 auto;
     padding: 20px 40px 10px;
@@ -20,8 +27,8 @@
     text-align: center;
     padding: 0 0 10px;
     position: absolute;
-    top: 10px;
-    right: 10px;
+    bottom: -70px;
+    right: 0;
 }
 .adventure .navigation-view .navigation-start-over {
     display: inline-block;
@@ -69,6 +76,8 @@
 
 .adventure .step-child {
     margin-bottom: 0;
+    padding-left: 15px;
+    padding-right: 15px;
 }
 
 .adventure .ooyala-child {
@@ -106,6 +115,8 @@
     width: 30px;
     height: 30px;
     border: 2px solid #C4C4C4;
+    z-index: 1;
+    pointer-events: none;
 }
 .adventure .choice-selector:after {
     position: absolute;
@@ -126,15 +137,45 @@
 }
 .adventure .choice-label {
     display: block;
-    padding: 20px 15px 20px 60px;
+    padding: 18px 60px 18px;
     min-height: 70px;
     font-size: 18px;
     line-height: 30px;
+    border: 2px solid transparent;
+    position: relative;
+}
+.adventure .choice-label:after {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    border-radius: 50%;
+    background: #29CB97;
+    width: 40px;
+    height: 40px;
+    content: "\f00c";
+    font: 27px/40px FontAwesome;
+    text-align: center;
+    color: white;
+    margin: -20px 0 0;
+    display: none;
 }
 .adventure .choice-label:hover {
     background: #E2E2E2;
 }
-
+.adventure .choice.correct .choice-label {
+    border-color: #29CB97;
+}
+.adventure .choice.correct .choice-label:after {
+    display: block;
+}
+.adventure .choice.incorrect .choice-label {
+    border-color: #FF7A00;
+}
+.adventure .choice.incorrect .choice-label:after {
+    background: #FF7A00;
+    content: "\f00d";
+    display: block;
+}
 .hide {
     display: none;
 }
@@ -154,7 +195,7 @@
     padding: 20px 15px 0;
     margin: 0 !important;
 }
-.None_2_1-info .xblock-light-child {
+.step-content .None_2_1-info .xblock-light-child {
     margin: 0 auto;
     max-width: 600px;
     background: #F2F2F2;
@@ -172,6 +213,111 @@
     font-weight: 700;
     margin: 0 0 10px !important;
 }
-.adventure .step-child .html_child >strong, .adventure .step-child .html_child >p {
+.adventure .step-content .wrapper-video .step-child .html_child >strong, .adventure .step-content .wrapper-video .step-child .html_child >p {
     padding-right: 130px;
+}
+.step-content .wrapper-video {
+    position: relative;
+}
+.step-content .wrapper-video .videoWrapper {
+    margin-top: 15px;
+}
+.step-content .xblock-light-child {
+    margin: 0 auto;
+    max-width: 600px;
+    padding: 0 40px;
+    background: #F2F2F2;
+    overflow: hidden;
+}
+.step-content .xblock-light-child .html_child {
+    margin-top: 15px;
+}
+.step-content .xblock-light-child p {
+    margin: 0;
+}
+.step-content .xblock-light-child .html_child.correct, .step-content .xblock-light-child .html_child.incorrect {
+    margin: 15px -15px;
+    padding: 20px 30px;
+    background: #BFEFE0;
+    border-radius: 4px;
+    font-size: 18px;
+    line-height: 24px;
+    color: #2E2E2E;
+}
+.step-content .xblock-light-child .html_child.correct p, .step-content .xblock-light-child .html_child.incorrect p {
+    margin: 0;
+}
+.step-content .xblock-light-child .html_child.incorrect {
+    background: #FFD7B3;
+}
+.step-content .xblock-light-child .html_child.correct strong, .step-content .xblock-light-child .html_child.incorrect strong {
+    display: block;
+    margin: 0 0 15px;
+    color: #2E2E2E;
+    font-size: 24px;
+    line-height: 30px;
+    padding: 5px 0 5px 55px;
+    position: relative;
+}
+.step-content .xblock-light-child .html_child.correct strong:after, .step-content .xblock-light-child .html_child.incorrect strong:after {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    border-radius: 50%;
+    background: #29CB97;
+    width: 40px;
+    height: 40px;
+    content: "\f00c";
+    font: 27px/40px FontAwesome;
+    text-align: center;
+    color: white;
+    margin: -20px 0 0;
+}
+.step-content .xblock-light-child .html_child.incorrect strong:after {
+    background: #FF7A00;
+    content: "\f00d";
+}
+@media screen and (max-width: 700px) {
+    .adventure .step-body {
+        padding: 0 0 10px;
+    }
+    .adventure .choice-selector {
+        width: 25px;
+        height: 25px;
+        top: 14px;
+    }
+    .adventure .choice-label {
+        padding: 10px 50px 10px;
+        min-height: 51px;
+        font-size: 18px;
+        line-height: 25px;
+    }
+    .adventure .choice-label:after {
+        right: 10px;
+        width: 30px;
+        height: 30px;
+        font: 18px/30px FontAwesome;
+        margin: -15px 0 0;
+    }
+    .navigation-next, .navigation-back {
+        height: 40px;
+        font-size: 14px;
+        line-height: 20px;
+    }
+    .step-content .xblock-light-child .html_child.correct, .step-content .xblock-light-child .html_child.incorrect {
+        padding: 15px;
+    }
+    .step-content .xblock-light-child .html_child.correct strong, .step-content .xblock-light-child .html_child.incorrect strong {
+        font-size: 19px;
+        line-height: 30px;
+        padding: 5px 0 5px 35px;
+        margin: 0 0 5px;
+    }
+    .step-content .xblock-light-child .html_child.correct strong:after, .step-content .xblock-light-child .html_child.incorrect strong:after {
+        width: 30px;
+        height: 30px;
+        line-height: 30px;
+        font-size: 18px;
+        margin-top: -15px;
+    }
 }
