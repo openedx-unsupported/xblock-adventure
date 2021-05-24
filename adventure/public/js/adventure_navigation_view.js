@@ -41,7 +41,6 @@ var AdventureNavigationView = Backbone.Marionette.ItemView.extend({
         if (step.get('has_choices') && !step.get('student_choice')) {
             this.ui.nextButton.attr('disabled','disabled');
             this.ui.nextButton.show();
-            this.app.vent.trigger('choices:load');
         }
         else {
             this.ui.nextButton.removeAttr('disabled');
@@ -66,7 +65,7 @@ var AdventureNavigationView = Backbone.Marionette.ItemView.extend({
         else {
             this.ui.startOverButton.hide();
         }
-
+        this.app.vent.trigger('choices:load');
     },
 
     onStepChoiceSelect: function(step) {

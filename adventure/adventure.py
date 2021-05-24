@@ -83,9 +83,6 @@ DEFAULT_XML_CONTENT = textwrap.dedent("""\
         <p>Not quite. That wasn't such a good idea. Mary feels confused because you stated something as a fact that 
         doesn't match her perception...</p>
       </html>
-      <html>
-        <p>You need to see if you can get the conversation back on track.</p>
-      </html>
       <mcq type="choices">
         <question>What will you say next?</question>
         <choice value="last-correct">(a) Tell me what you think Bob's perception of the meeting was.</choice>
