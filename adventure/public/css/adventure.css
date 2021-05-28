@@ -93,7 +93,8 @@
     border-width: 1px 0;
 }
 
-.adventure .ooyala-child .ooyala-player-xblock-wrapper .transcript-header, .ooyala-player-xblock-wrapper .transcript-content,
+.adventure .ooyala-child .ooyala-player-xblock-wrapper .transcript-header, 
+.ooyala-player-xblock-wrapper .transcript-content,
 .adventure .ooyala-child .ooyala-player-xblock-wrapper .transcript-footer {
     border-bottom: none;
 }
@@ -118,7 +119,7 @@
     position: absolute;
     left: 15px;
     top: 50%;
-    margin-top: -20px;
+    margin-top: -15px;
     width: 30px;
     height: 30px;
     border: 2px solid #C4C4C4;
@@ -220,9 +221,6 @@
     font-weight: 700;
     margin: 0 0 10px !important;
 }
-.adventure .step-content .wrapper-video .step-child .html_child >strong, .adventure .step-content .wrapper-video .step-child .html_child >p {
-    padding-right: 130px;
-}
 .step-content .wrapper-video {
     position: relative;
 }
@@ -242,7 +240,8 @@
 .step-content .xblock-light-child p {
     margin: 0;
 }
-.step-content .xblock-light-child .html_child.correct, .step-content .xblock-light-child .html_child.incorrect {
+.step-content .xblock-light-child .html_child.correct, 
+.step-content .xblock-light-child .html_child.incorrect {
     margin: 15px -15px;
     padding: 20px 30px;
     background: #BFEFE0;
@@ -251,13 +250,15 @@
     line-height: 24px;
     color: #2E2E2E;
 }
-.step-content .xblock-light-child .html_child.correct p, .step-content .xblock-light-child .html_child.incorrect p {
+.step-content .xblock-light-child .html_child.correct p, 
+.step-content .xblock-light-child .html_child.incorrect p {
     margin: 0;
 }
 .step-content .xblock-light-child .html_child.incorrect {
     background: #FFD7B3;
 }
-.step-content .xblock-light-child .html_child.correct strong, .step-content .xblock-light-child .html_child.incorrect strong {
+.step-content .xblock-light-child .html_child.correct strong, 
+.step-content .xblock-light-child .html_child.incorrect strong {
     display: block;
     margin: 0 0 15px;
     color: #2E2E2E;
@@ -266,7 +267,8 @@
     padding: 5px 0 5px 55px;
     position: relative;
 }
-.step-content .xblock-light-child .html_child.correct strong:after, .step-content .xblock-light-child .html_child.incorrect strong:after {
+.step-content .xblock-light-child .html_child.correct strong:after, 
+.step-content .xblock-light-child .html_child.incorrect strong:after {
     position: absolute;
     left: 0;
     top: 50%;
@@ -283,6 +285,30 @@
 .step-content .xblock-light-child .html_child.incorrect strong:after {
     background: #FF7A00;
     content: "\f00d";
+}
+.rtl-content .adventure .choice-selector {
+    left: auto;
+    right: 15px;
+}
+.rtl-content .adventure .choice-label:after {
+    right: auto;
+    left: 15px;
+}
+.rtl-content .navigation-next, .rtl-content .navigation-back {
+    margin: 0 0 10px 20px;
+}
+.rtl-content .adventure .navigation-view .over-btn {
+    right: auto;
+    left: 0;
+}
+.rtl-content .step-content .xblock-light-child .html_child.correct strong, 
+.rtl-content .step-content .xblock-light-child .html_child.incorrect strong {
+    padding: 5px 55px 5px 0;
+}
+.rtl-content .step-content .xblock-light-child .html_child.correct strong:after, 
+.rtl-content .step-content .xblock-light-child .html_child.incorrect strong:after {
+    left: auto;
+    right: 0;
 }
 @media screen and (max-width: 700px) {
     .adventure .step-body {
@@ -311,20 +337,27 @@
         font-size: 14px;
         line-height: 20px;
     }
-    .step-content .xblock-light-child .html_child.correct, .step-content .xblock-light-child .html_child.incorrect {
+    .step-content .xblock-light-child .html_child.correct, 
+    .step-content .xblock-light-child .html_child.incorrect {
         padding: 15px;
     }
-    .step-content .xblock-light-child .html_child.correct strong, .step-content .xblock-light-child .html_child.incorrect strong {
+    .step-content .xblock-light-child .html_child.correct strong, 
+    .step-content .xblock-light-child .html_child.incorrect strong {
         font-size: 19px;
         line-height: 30px;
         padding: 5px 0 5px 35px;
         margin: 0 0 5px;
     }
-    .step-content .xblock-light-child .html_child.correct strong:after, .step-content .xblock-light-child .html_child.incorrect strong:after {
+    .step-content .xblock-light-child .html_child.correct strong:after, 
+    .step-content .xblock-light-child .html_child.incorrect strong:after {
         width: 30px;
         height: 30px;
         line-height: 30px;
         font-size: 18px;
         margin-top: -15px;
+    }
+    .rtl-content .step-content .xblock-light-child .html_child.correct strong, 
+    .rtl-content .step-content .xblock-light-child .html_child.incorrect strong {
+        padding: 5px 35px 5px 0;
     }
 }
