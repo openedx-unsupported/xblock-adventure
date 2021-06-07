@@ -45,7 +45,7 @@
     color: #DB232D;
     border-radius: 5px;
 }
-.adventure .navigation-view .navigation-start-over:hover {
+.adventure .navigation-view .navigation-start-over:hover, .adventure .navigation-view .navigation-start-over:focus {
     color: white;
     background: #DB232D;
 }
@@ -64,6 +64,7 @@
     outline: none !important;
     text-shadow: none;
     margin: 0 20px 10px 0;
+    border: none !important;
 }
 .navigation-next:hover, .navigation-back:hover {
     background: #8BC5CB !important;
@@ -312,7 +313,7 @@
 }
 @media screen and (max-width: 700px) {
     .adventure .step-body {
-        padding: 0 0 10px;
+        padding: 10px 0;
     }
     .adventure .choice-selector {
         width: 25px;
