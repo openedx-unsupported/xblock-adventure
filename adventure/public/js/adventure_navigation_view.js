@@ -27,6 +27,7 @@ var AdventureNavigationView = Backbone.Marionette.ItemView.extend({
     },
 
     onShowPreviousStep: function(event) {
+        event.currentTarget.disabled = true;
         event.preventDefault();
         this.app.vent.trigger('show:previous:step');
     },
@@ -66,6 +67,7 @@ var AdventureNavigationView = Backbone.Marionette.ItemView.extend({
             this.ui.startOverButton.hide();
         }
         this.app.vent.trigger('choices:load');
+        this.ui.backButton.removeAttr('disabled');
     },
 
     onStepChoiceSelect: function(step) {

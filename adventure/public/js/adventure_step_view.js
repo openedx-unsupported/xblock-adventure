@@ -48,25 +48,64 @@ var AdventureStepView = Backbone.Marionette.LayoutView.extend({
     },
 
     onChoicesLoad: function() {
+        $("input[type=radio]").map( function() {
+            var nameValue = $(this).attr('value').replace("-correct", "")
+            $("[data-type='HTMLBlock'] [name='"+ nameValue + "']").hide()
+            $(this).parents(".choice").removeClass("checked correct incorrect")
+        });
+
+        var isFullScreen = false;
         if (wistiaEmbeds.iframes.length > 0) {
+            wistiaEmbeds.bind("enterfullscreen", function() {
+                isFullScreen = true;
+            });
+            wistiaEmbeds.bind("cancelfullscreen", function() {
+                isFullScreen = false;
+                if (wistiaApi._state === 'ended') {
+                    $(".navigation-view").addClass('show').removeClass('hide');
+                    var mcqBlock = $('[data-type="MCQBlock"]');
+                    mcqBlock.addClass("show").removeClass("hide")
+                    if (mcqBlock.length) {
+                        $('.videoWrapper').css("pointer-events", "none" )
+                    } else {
+                        $(".navigation-next").css('display','none');
+                        if ($('.navigation-back').css('display') === 'none') {
+                            $(".navigation-back-next-buttons").css("background", "#ffffff");
+                        }
+                    }
+                }
+            });
+
             wistiaEmbeds.bind("end", function() {
-                $(".navigation-view").addClass("show").removeClass("hide")
-                $('[data-type="MCQBlock"]').addClass("show").removeClass("hide")
-                $('.videoWrapper').css("pointer-events", "none" )
-                if (!$(".checked").length){
-                    $('.navigation-next').attr('disabled', 'disabled')
+                if (isFullScreen) {
+                    return
+                }
+                $(".navigation-view").addClass('show').removeClass('hide');
+                var mcqBlock = $('[data-type="MCQBlock"]');
+                mcqBlock.addClass("show").removeClass("hide")
+                if (mcqBlock.length) {
+                    $('.videoWrapper').css("pointer-events", "none" )
+                } else {
+                    $(".navigation-next").css('display','none');
+                    if ($('.navigation-back').css('display') === 'none') {
+                        $(".navigation-back-next-buttons").css("background", "#ffffff");
+                    }
                 }
             });
             $("[data-type='MCQBlock']").parent().addClass("mcq-block");
             $(".navigation-view").addClass("hide").removeClass("show")
             $('[data-type="MCQBlock"]').addClass("hide").removeClass("show")
             $('.videoWrapper').removeAttr("style")
+        } else {
+            $(".navigation-view").addClass("show").removeClass("hide");
+            if (!$('[data-type="MCQBlock"]').length) {
+                $(".navigation-next").css('display','none');
+            }
         }
-        $("input[type=radio]").map( function() {
-            var nameValue = $(this).attr('value').replace("-correct", "")
-            $("[data-type='HTMLBlock'] [name='"+ nameValue + "']").hide()
-            $(this).parents(".choice").removeClass("checked correct incorrect")
-        });
+
+        if (!$(".checked").length){
+            $('.navigation-next').attr('disabled', 'disabled')
+        }
 
         // wrapping video and MCQs section in order to show feedback below MCQs options
         if (!$(".wrapper-video").length) {
@@ -82,12 +121,12 @@ var AdventureStepView = Backbone.Marionette.LayoutView.extend({
         var data = {};
 
         // Returns the selected choice
-        var selected_choice = $('input[type=radio]:checked', this.ui.choices);
+        var selectedChoice = $('input[type=radio]:checked');
         var newClass = '';
-        if (selected_choice.length) {
-            data['choice'] = selected_choice.val().replace("-correct", "");
+        if (selectedChoice.length) {
+            data['choice'] = selectedChoice.val().replace("-correct", "");
             $('.navigation-next').removeAttr("disabled")
-            newClass = selected_choice.val().includes("-correct")? "correct": "incorrect";
+            newClass = selectedChoice.val().includes("-correct")? "correct": "incorrect";
         }
 
         $("input[type=radio]").map( function() {
@@ -100,7 +139,7 @@ var AdventureStepView = Backbone.Marionette.LayoutView.extend({
 
         feedbackText.show();
         feedbackText.addClass(newClass);
-        selected_choice.parents(".choice").addClass("checked " + newClass)
+        selectedChoice.parents(".choice").addClass("checked " + newClass)
 
         return data;
     },
