@@ -19,7 +19,7 @@
 }
 .adventure .navigation-view .navigation-back-next-buttons {
     margin: 0 auto;
-    padding: 20px 40px 10px;
+    padding: 20px 25px 10px;
     max-width: 600px;
     background: #F2F2F2;
     border-radius: 0 0 4px 4px;
@@ -101,6 +101,7 @@
 }
 
 .adventure .question {
+    margin: 0 -15px;
     margin-bottom: 1em;
     max-width: 100%;
 }
