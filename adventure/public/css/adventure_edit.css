@@ -1,3 +1,31 @@
 .adventure-edit .module-actions .error-message {
     color: red;
 }
+[class*="view-"] .modal-lg.modal-editor .modal-content {
+    height: 530px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 0;
+}
+.change-btn-text {
+    padding: 15px 20px;
+    border-top: 1px solid #ccc;
+}
+.change-btn-text .wrapper-comp-setting {
+    display: inline-block;
+    vertical-align: top;
+    width: 22%;
+    margin: 0 2%;;
+}
+.change-btn-text .wrapper-comp-setting .setting-label {
+    display: block;
+    margin: 0 0 10px;
+    font-size: 18px;
+}
+.change-btn-text .wrapper-comp-setting  input {
+    width: 100%;
+    padding: 0 10px;
+    height: 40px;
+    line-height: 38px;
+    font-size: 16px;
+}

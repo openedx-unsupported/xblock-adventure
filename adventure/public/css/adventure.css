@@ -65,6 +65,9 @@
     text-shadow: none;
     margin: 0 20px 10px 0;
     border: none !important;
+    min-width: 80px;
+    text-align: center;
+    padding: 7px 18px;
 }
 .navigation-next:hover, .navigation-back:hover {
     background: #8BC5CB !important;

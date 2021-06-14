@@ -88,6 +88,10 @@ var AdventureController = Backbone.Marionette.Controller.extend({
         };
         this._changeStepRegion(new AdventureStepView(options));
         this.app.vent.trigger("step:change", step);
+        $('.navigation-back').html(this.app.params.back);
+        $('.navigation-next').html(this.app.params.next);
+        $('.navigation-start-over').html(this.app.params.start);
+        $('.navigation-back-next-buttons').removeAttr("style");
     },
 
     showCurrentStep: function() {

@@ -33,7 +33,7 @@ from lxml import etree
 from web_fragments.fragment import Fragment
 from xblock.completable import CompletableXBlockMixin
 from xblock.core import XBlock
-from xblock.fields import UNIQUE_ID, Integer, List, Scope, String
+from xblock.fields import UNIQUE_ID, Integer, List, Scope, String, Dict
 
 from mentoring.light_children import XBlockWithLightChildren
 from mentoring.title import TitleBlock
@@ -145,6 +145,23 @@ class AdventureBlock(CompletableXBlockMixin, XBlockWithLightChildren):
 
     display_name = String(help="Display name of the component", default="Adventure",
                           scope=Scope.settings)
+    title_map = Dict(
+        help="title map", scope=Scope.settings,
+        default={'start': 'Start Over', 'back': 'Go Back', 'next': "Let's See What Happens"}
+    )
+
+    @property
+    def student_view_title_map(self):
+        """
+        student view data
+        :return: (dict) dict containing data for student view titles
+        """
+
+        return {
+            'back': self.title_map.get('back'),
+            'next': self.title_map.get('next'),
+            'start': self.title_map.get('start'),
+        }
 
     def _get_current_step(self):
         """
@@ -396,7 +413,7 @@ class AdventureBlock(CompletableXBlockMixin, XBlockWithLightChildren):
                 "text/html"
             )
         fragment.add_javascript_url("https://fast.wistia.com/assets/external/E-v1.js")
-        fragment.initialize_js('AdventureBlock')
+        fragment.initialize_js('AdventureBlock', self.student_view_title_map)
 
         return fragment
 
@@ -487,6 +504,7 @@ class AdventureBlock(CompletableXBlockMixin, XBlockWithLightChildren):
         log.debug(u'Received studio submissions: {}'.format(submissions))
 
         xml_content = submissions['xml_content']
+        self.title_map = submissions['title_map']
         try:
             content = etree.parse(StringIO(xml_content))
         except etree.XMLSyntaxError as e:

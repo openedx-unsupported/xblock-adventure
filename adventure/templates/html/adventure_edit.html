@@ -5,6 +5,23 @@
   <div class="wrapper-comp-settings is-active" id="settings-tab">
     <textarea class="block-xml-editor">{{ xml_content }}</textarea>
   </div>
+
+  <div class="change-btn-text">
+    <div class="wrapper-comp-setting">
+      <label class="label setting-label" for="start-title">Start Button Title</label>
+      <input type="text" name="start-title" id="start-title" value="{{self.title_map.start}}"/>
+    </div>
+    <div class="wrapper-comp-setting">
+      <label  class="label setting-label" for="back-btn-title">Back Button Title</label>
+      <input type="text" name="back-btn-title" id="back-btn-title" value="{{self.title_map.back}}"/>
+    </div>
+    <div class="wrapper-comp-setting">
+      <label  class="label setting-label" for="next-btn-title">Next Button Title</label>
+      <input type="text" name="next-btn-title" id="next-btn-title" value="{{self.title_map.next}}"/>
+    </div>
+  </div>
+
+
   <div class="xblock-actions">
     <span class="error-message"></span>
     <ul>

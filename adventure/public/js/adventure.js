@@ -1,9 +1,10 @@
-function AdventureBlock(runtime, element) {
+function AdventureBlock(runtime, element, params) {
     var id = $('.adventure', element).attr('id');
 
     // Create our application
     var app = new Backbone.Marionette.Application({
         'container': element,
+        'params': params,
         'channelName': id // communication channel for multiple xblocks
     });
 
@@ -50,7 +51,12 @@ function AdventureEditBlock(runtime, element) {
     $('.save-button', element).bind('click', function() {
         var handlerUrl = runtime.handlerUrl(element, 'studio_submit'),
             data = {
-                'xml_content': xmlEditor.getValue()
+                'xml_content': xmlEditor.getValue(),
+                'title_map': {
+                    'next': $('#next-btn-title', element).val(),
+                    'back': $('#back-btn-title', element).val(),
+                    'start': $('#start-title', element).val()
+                },
             };
 
         $('.error-message', element).html();
