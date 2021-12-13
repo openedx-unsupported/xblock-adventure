@@ -130,6 +130,7 @@
     border: 2px solid #C4C4C4;
     z-index: 1;
     pointer-events: none;
+    border-radius: 50%;
 }
 .adventure .choice-selector:after {
     position: absolute;
@@ -140,6 +141,7 @@
     content: "";
     background: #8BC5CB;
     display: none;
+    border-radius: 50%;
 }
 .adventure .choice {
     margin: 0 -15px 2px;
