@@ -1,7 +1,5 @@
 # Adventure XBlock
 
-## Notice: This repo will be moved to the [openedx organization](https://github.com/openedx) in April 2021.
-
 Adventure XBlock is an XBlock for creating a simple
 [chose your own adventure][wiki-cyoa] style simulation.
 
