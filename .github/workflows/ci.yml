@@ -1,0 +1,64 @@
+name: Default CI
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+jobs:
+  python-tests:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-20.04]
+        python-version: ["3.8"]
+
+    env:
+      MYSQL_HOST: "127.0.0.1"  # For Django DATABASES setting.
+      VIRTUAL_ENV: ${{ github.workspace }}/venv
+
+    services:
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+          MYSQL_ROOT_PASSWORD: ""
+        ports:
+          - 3306:3306
+    steps:
+      - uses: actions/checkout@v2
+      - name: Python setup
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+
+
+      - name: Set up test environment
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libxmlsec1-dev
+          sudo apt-get install xvfb gettext
+          wget https://github.com/mozilla/geckodriver/releases/download/v0.25.0/geckodriver-v0.25.0-linux64.tar.gz
+          mkdir geckodriver
+          tar -xzf geckodriver-v0.25.0-linux64.tar.gz -C geckodriver
+          export PATH=$PATH:$PWD/geckodriver
+          export BOKCHOY_HEADLESS=true
+          mkdir -p var
+
+      - name: Install Firefox 72.0
+        run: |
+          sudo apt-get purge firefox
+          wget "https://ftp.mozilla.org/pub/firefox/releases/72.0.2/linux-x86_64/en-US/firefox-72.0.2.tar.bz2"
+          tar -xjf firefox-72.0.2.tar.bz2
+          sudo mv firefox /opt/firefox
+          sudo ln -s /opt/firefox/firefox /usr/bin/firefox
+
+      - name: Install Requirements
+        run: |
+          pip install -r requirements.txt
+          pip install -r test_requirements.txt
+      - name: Run Pycodestyle
+        run: pycodestyle adventure --max-line-length=120 --exclude=adventure/adventure.py
+      - name: Run Pylint
+        run: pylint tests adventure --unsafe-load-any-extension=y
+      - name: Run Pytest
+        run: xvfb-run pytest tests
