@@ -80,7 +80,7 @@ LOCALE_PATHS = [
 # http://django-statici18n.readthedocs.io/en/latest/settings.html
 
 with open(os.path.join(BASE_DIR, 'adventure/translations/config.yaml'), 'r') as locale_config_file:
-    LOCALE_CONFIG = yaml.load(locale_config_file)
+    LOCALE_CONFIG = yaml.load(locale_config_file, Loader=yaml.Loader)
 
     LANGUAGES = [
         (code, code,)
