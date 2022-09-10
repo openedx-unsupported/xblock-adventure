@@ -15,7 +15,7 @@ It also has the ability to embed other `XBlockLightChildren`s such as
 html, video, etc.
 
 [wiki-cyoa]: https://en.wikipedia.org/wiki/Choose_Your_Own_Adventure
-[mentoring-mcq]: https://github.com/edx-solutions/xblock-mentoring#self-assessment-mcqs
+[mentoring-mcq]: https://github.com/openedx/xblock-mentoring#self-assessment-mcqs
 
 ## Installation
 
@@ -77,8 +77,8 @@ Of special interest is the `<mcq>` element, that can act as a selector for the n
 In this case, the selected value of the choice must be a valid name for one of the steps.
 Once selected, this choice will act the same way as if the step would have it as it's `next` attribute.
 
-[mentoring-doc]: https://github.com/edx-solutions/xblock-mentoring
-[ooyala-doc]: https://github.com/edx-solutions/xblock-ooyala
+[mentoring-doc]: https://github.com/openedx-unsupported/xblock-mentoring
+[ooyala-doc]: https://github.com/openedx-unsupported/xblock-ooyala
 
 ## Example
 
@@ -92,9 +92,9 @@ a new adventure unit defaults to in the Studio.
 This repo offers multiple make targets to automate the translation tasks.
 Each make target will be explained below:
 
-- `extract_translations`. Use [`i18n_tool` extract](https://github.com/edx/i18n-tools) to create `.po` files based on all the tagged strings in the python and javascript code.
-- `compile_translations`. Use [`i18n_tool` generate](https://github.com/edx/i18n-tools) to create `.mo` compiled files.
-- `detect_changed_source_translations`. Use [`i18n_tool` changed](https://github.com/edx/i18n-tools) to identify any updated translations.
+- `extract_translations`. Use [`i18n_tool` extract](https://github.com/openedx/i18n-tools) to create `.po` files based on all the tagged strings in the python and javascript code.
+- `compile_translations`. Use [`i18n_tool` generate](https://github.com/openedx/i18n-tools) to create `.mo` compiled files.
+- `detect_changed_source_translations`. Use [`i18n_tool` changed](https://github.com/openedx/i18n-tools) to identify any updated translations.
 - `validate_translations`. Compile translations and check the source translations haven't changed.
 
 If you want to add a new language:
