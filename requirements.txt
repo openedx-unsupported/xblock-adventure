@@ -1,7 +1,7 @@
 -e .
 -e git+https://github.com/openedx-unsupported/xblock-mentoring.git@rebase-juniper#egg=xblock-mentoring==rebase-juniper
 -e git+https://github.com/openedx-unsupported/xblock-ooyala.git@rebase-juniper#egg=xblock-ooyala-player==rebase-juniper
-Django==3.2.15
+Django==2.2.28
 edx-i18n-tools==0.5.3
 lazy==1.4
 lxml==4.5.2
