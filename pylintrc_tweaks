@@ -4,4 +4,4 @@ ignore = migrations
 load-plugins = edx_lint.pylint,pylint_django
 [MESSAGES CONTROL]
 # TODO (CCB): Re-enable not-callable once we fix the false-positives
-DISABLE+= ,invalid-name,missing-docstring,cyclic-import,modelform-uses-exclude,simplifiable-if-expression,logging-format-interpolation,redundant-u-string-prefix,unused-argument,import-error,too-many-statements,unused-import,unsafe-yaml-load,useless-suppression
+DISABLE+= ,invalid-name,missing-docstring,cyclic-import,modelform-uses-exclude,simplifiable-if-expression,logging-format-interpolation,redundant-u-string-prefix,unused-argument,import-error,too-many-statements,unused-import,unsafe-yaml-load,useless-suppression,django-not-configured

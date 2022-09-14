@@ -285,7 +285,7 @@ disable =
 	feature-toggle-needs-doc,
 	illegal-waffle-usage,
 	
-	logging-fstring-interpolation,,invalid-name,missing-docstring,cyclic-import,modelform-uses-exclude,simplifiable-if-expression,logging-format-interpolation,redundant-u-string-prefix,unused-argument,import-error,too-many-statements,unused-import,unsafe-yaml-load,useless-suppression
+	logging-fstring-interpolation,,invalid-name,missing-docstring,cyclic-import,modelform-uses-exclude,simplifiable-if-expression,logging-format-interpolation,redundant-u-string-prefix,unused-argument,import-error,too-many-statements,unused-import,unsafe-yaml-load,useless-suppression,django-not-configured
 
 [REPORTS]
 output-format = text
@@ -382,4 +382,4 @@ int-import-graph =
 [EXCEPTIONS]
 overgeneral-exceptions = Exception
 
-# f5c4b4909663b428b2045b3bd01552a00a853d1b
+# 769a2d69c3222c564e3bdf43efa68d842efdcad3
