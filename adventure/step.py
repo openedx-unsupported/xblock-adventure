@@ -74,7 +74,7 @@ class StepBlock(LightChild, StepParentMixin):
 
         choices = [child for child in self.get_children_objects() if isinstance(child, MCQBlock)]
 
-        return True if choices else False
+        return bool(choices)
 
     @property
     def ooyala_players(self):
@@ -92,7 +92,7 @@ class StepBlock(LightChild, StepParentMixin):
 
         ooyala_children = {}
         for child in self.get_children_objects():
-            ooyala_children[child.name] = True if isinstance(child, OoyalaPlayerLightChildBlock) else False
+            ooyala_children[child.name] = bool(isinstance(child, OoyalaPlayerLightChildBlock))
 
         fragment, named_children = self.get_children_fragment(context)
         for name, child in named_children:

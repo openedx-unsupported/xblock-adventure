@@ -1,0 +1,20 @@
+# pylintrc tweaks for use with edx_lint.
+[MASTER]
+ignore = migrations
+
+[FORMAT]
+max-line-length = 120
+
+[MESSAGES CONTROL]
+
+disable+ = 
+    django-not-configured,
+    missing-class-docstring,
+    missing-function-docstring,
+    missing-module-docstring,
+    too-many-statements,
+    unused-import,
+    logging-format-interpolation,
+    unsafe-yaml-load,
+    not-an-iterable,
+    unused-argument
