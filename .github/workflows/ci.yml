@@ -59,6 +59,6 @@ jobs:
       - name: Run Pycodestyle
         run: pycodestyle adventure --max-line-length=120 --exclude=adventure/adventure.py
       - name: Run Pylint
-        run: pylint tests adventure --unsafe-load-any-extension=y
+        run: pylint tests adventure --rcfile=pylintrc --unsafe-load-any-extension=y
       - name: Run Pytest
         run: xvfb-run pytest tests

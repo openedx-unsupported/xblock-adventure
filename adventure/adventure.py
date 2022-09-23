@@ -268,9 +268,9 @@ class AdventureBlock(CompletableXBlockMixin, XBlockWithLightChildren):
                 'result': 'success',
                 'step': {
                     'name': current_step.name,
-                    'has_back_step': True if current_step.back else False,
-                    'has_next_step': True if current_step.next else False,
-                    'can_start_over': False if self.current_step_name == 'first' else True,
+                    'has_back_step': bool(current_step.back),
+                    'has_next_step': bool(current_step.next),
+                    'can_start_over': not bool(self.current_step_name == 'first'),
                     'html': step_fragment.content,
                     'has_choices': current_step.has_choices,
                     'student_choice': self._get_student_choice(current_step),
@@ -392,7 +392,7 @@ class AdventureBlock(CompletableXBlockMixin, XBlockWithLightChildren):
 
     @XBlock.json_handler
     def submit(self, submissions, suffix=''):
-        log.debug(u'Received submissions for {}, step "{}":{}'.format(
+        log.debug('Received submissions for {}, step "{}":{}'.format(
             self.adventure_id, self.current_step_name, submissions))
 
         current_step = self._get_current_step()
@@ -420,14 +420,14 @@ class AdventureBlock(CompletableXBlockMixin, XBlockWithLightChildren):
 
     @XBlock.json_handler
     def fetch_current_step(self, submissions, suffix=''):
-        log.debug(u'Fetching current student step for {}, step "{}"'.format(
+        log.debug('Fetching current student step for {}, step "{}"'.format(
             self.adventure_id, self.current_step_name))
 
         return self._render_current_step()
 
     @XBlock.json_handler
     def fetch_previous_step(self, submissions, suffix=''):
-        log.debug(u'Fetching previous student step for {}, step "{}"'.format(
+        log.debug('Fetching previous student step for {}, step "{}"'.format(
             self.adventure_id, self.current_step_name))
 
         previous_step = self._get_previous_step()
@@ -438,7 +438,7 @@ class AdventureBlock(CompletableXBlockMixin, XBlockWithLightChildren):
 
     @XBlock.json_handler
     def start_over(self, submissions, suffix=''):
-        log.debug(u'Start Over {}'.format(self.adventure_id))
+        log.debug('Start Over {}'.format(self.adventure_id))
 
         while self.student_choices:
             self.student_choices.pop()
@@ -467,7 +467,7 @@ class AdventureBlock(CompletableXBlockMixin, XBlockWithLightChildren):
 
     @XBlock.json_handler
     def studio_submit(self, submissions, suffix=''):
-        log.debug(u'Received studio submissions: {}'.format(submissions))
+        log.debug('Received studio submissions: {}'.format(submissions))
 
         xml_content = submissions['xml_content']
         try:
@@ -500,7 +500,7 @@ class AdventureBlock(CompletableXBlockMixin, XBlockWithLightChildren):
 
                 self.xml_content = etree.tostring(content, encoding='unicode', pretty_print=True)
 
-        log.debug(u'Response from Studio: {}'.format(response))
+        log.debug('Response from Studio: {}'.format(response))
         return response
 
     @staticmethod

@@ -51,7 +51,7 @@ class XBlockWithChildrenFragmentsMixin(object):  # pylint: disable=useless-objec
         """
         fragment = Fragment()
         named_child_frags = []
-        for child_id in self.children:  # pylint: disable=E1101
+        for child_id in self.children:
             child = self.runtime.get_block(child_id)
             if instance_of is not None and not isinstance(child, instance_of):
                 continue

@@ -10,7 +10,7 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 import os
 
 import yaml
-from workbench.settings import *  # pylint: disable=wildcard-import, unused-wildcard-import
+from workbench.settings import *  # pylint: disable=wildcard-import
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
