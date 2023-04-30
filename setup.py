@@ -62,5 +62,5 @@ setup(
         'xblock.v1': BLOCKS,
         'xblock.light_children': BLOCKS_CHILDREN,
     },
-    package_data=package_data("adventure", ["templates", "public"]),
+    package_data=package_data("adventure", ["templates", "public", "conf", "translations"]),
 )
